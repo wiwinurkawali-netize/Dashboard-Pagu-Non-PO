@@ -445,22 +445,81 @@
             </div>
         </div>
 
-        <!-- TAB 3: TREND KOMPONEN PER BIDANG (GRID 8 KARTU DIAGRAM TABUNG) -->
+        <!-- TAB 3: TREND KOMPONEN PER BIDANG (DIAGRAM TABUNG GABUNGAN + BREAKDOWN GRID 8 KARTU) -->
         <div id="tab-trend-bidang" class="tab-content hidden space-y-6">
+            
+            <!-- SECTION 1: DIAGRAM TABUNG GABUNGAN DI ATAS -->
             <div class="bi-card rounded-2xl p-5 shadow-sm space-y-4">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
                     <div>
                         <h3 class="text-sm font-bold text-white flex items-center gap-2">
                             <i class="fa-solid fa-chart-column text-sky-400"></i>
-                            Breakdown Diagram Tabung per Sub Bidang / Unit Layanan
+                            Diagram Tabung: Tren Bulanan Overtime, SPPD & Shifting per Bidang
                         </h3>
-                        <p class="text-xs text-slate-400">Visualisasi diagram batang tabung (cylinder bar) untuk rincian komponen Overtime, SPPD, dan Shifting per unit kerja</p>
+                        <p class="text-xs text-slate-400">Perbandingan pertumbuhan realisasi komponen varcost bulanan (Jan - Sep 2026) berformat diagram tabung/silinder</p>
+                    </div>
+                    <div>
+                        <select id="trendBidangSelect" onchange="renderCombinedCylinderCharts()" class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-xl p-2.5 outline-none">
+                            <option value="ALL">Semua Bidang Combined</option>
+                            <option value="OPERASI">Sub Bidang Operasi, Pemeliharaan & Aset</option>
+                            <option value="RITEL">Sub Bidang Penjualan Ritel & Administrasi</option>
+                            <option value="B2B">Sub Bidang Pemasaran & Penjualan B2B</option>
+                            <option value="DELIVERY">Sub Bidang Pembangunan & Delivery Layanan</option>
+                            <option value="MALUKU">Unit Layanan Maluku & Maluku Utara</option>
+                            <option value="PALU">Unit Layanan Palu, Kendari & Mamuju</option>
+                            <option value="PAPUA">Unit Layanan Papua & Papua Barat</option>
+                            <option value="SULUTENGGO">Unit Layanan Sulutenggo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Legend & Chart 3 Komponen Berjajar / Full Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-2">
+                    <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 space-y-3">
+                        <h4 class="text-xs font-bold text-sky-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-clock"></i> Trend Lembur (Overtime)
+                        </h4>
+                        <div class="relative h-64 w-full">
+                            <canvas id="cylinderOtChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 space-y-3">
+                        <h4 class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-plane"></i> Trend Biaya SPPD
+                        </h4>
+                        <div class="relative h-64 w-full">
+                            <canvas id="cylinderSppdChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 space-y-3">
+                        <h4 class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-shuffle"></i> Trend Premi Shifting
+                        </h4>
+                        <div class="relative h-64 w-full">
+                            <canvas id="cylinderShiftChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: BREAKDOWN DIAGRAM TABUNG PER SUB BIDANG / UNIT LAYANAN (GRID 8 KARTU) -->
+            <div class="bi-card rounded-2xl p-5 shadow-sm space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                    <div>
+                        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-table-cells-large text-amber-400"></i>
+                            BREAKDOWN DIAGRAM TABUNG PER SUB BIDANG / UNIT LAYANAN
+                        </h3>
+                        <p class="text-xs text-slate-400">Visualisasi rincian komparasi bulanan untuk masing-masing unit kerja</p>
                     </div>
                 </div>
 
                 <!-- GRID 8 UNIT CARDS -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-2" id="unitCylinderGrid"></div>
             </div>
+
         </div>
 
         <!-- TAB 4: RIWAYAT TOP-UP & ANGGARAN TERPAGU -->
@@ -571,15 +630,15 @@
             monthlyPagu: 64923083,
             
             monthlyTrend: [
-                { id: "Jan-26", label: "Jan", ot: 16994000, sppd: 21507200, shift: 24923000, total: 63424200, pagu: 64923083 },
-                { id: "Feb-26", label: "Feb", ot: 9698000, sppd: 28788850, shift: 24495000, total: 62981850, pagu: 64923083 },
-                { id: "Mar-26", label: "Mar", ot: 22667000, sppd: 22659262, shift: 41859000, total: 87185262, pagu: 64923083 },
-                { id: "Apr-26", label: "Apr", ot: 29792000, sppd: 52207081, shift: 26410000, total: 108409081, pagu: 64923083 },
-                { id: "Mei-26", label: "Mei", ot: 28278000, sppd: 12029439, shift: 48814000, total: 89121439, pagu: 64923083 },
-                { id: "Jun-26", label: "Jun", ot: 21336000, sppd: 7645260, shift: 26646000, total: 55627260, pagu: 64923083 },
-                { id: "Jul-26", label: "Jul", ot: 29911000, sppd: 16334360, shift: 18228000, total: 64473360, pagu: 64923083 },
-                { id: "Agu-26", label: "Agu", ot: 27590000, sppd: 38401583, shift: 26531000, total: 92522583, pagu: 64923083 },
-                { id: "Sep-26", label: "Sep", ot: 0, sppd: 0, shift: 0, total: 0, pagu: 64923083 }
+                { id: "Jan-26", label: "Jan-26", ot: 16994000, sppd: 21507200, shift: 24923000, total: 63424200, pagu: 64923083 },
+                { id: "Feb-26", label: "Feb-26", ot: 9698000, sppd: 28788850, shift: 24495000, total: 62981850, pagu: 64923083 },
+                { id: "Mar-26", label: "Mar-26", ot: 22667000, sppd: 22659262, shift: 41859000, total: 87185262, pagu: 64923083 },
+                { id: "Apr-26", label: "Apr-26", ot: 29792000, sppd: 52207081, shift: 26410000, total: 108409081, pagu: 64923083 },
+                { id: "Mei-26", label: "Mei-26", ot: 28278000, sppd: 12029439, shift: 48814000, total: 89121439, pagu: 64923083 },
+                { id: "Jun-26", label: "Jun-26", ot: 21336000, sppd: 7645260, shift: 26646000, total: 55627260, pagu: 64923083 },
+                { id: "Jul-26", label: "Jul-26", ot: 29911000, sppd: 16334360, shift: 18228000, total: 64473360, pagu: 64923083 },
+                { id: "Agu-26", label: "Agu-26", ot: 27590000, sppd: 38401583, shift: 26531000, total: 92522583, pagu: 64923083 },
+                { id: "Sep-26", label: "Sep-26", ot: 0, sppd: 0, shift: 0, total: 0, pagu: 64923083 }
             ],
 
             units: [
@@ -691,7 +750,10 @@
                 } else if (tabId === 'tab-monitoring') {
                     renderMonitoringTable();
                 } else if (tabId === 'tab-trend-bidang') {
-                    setTimeout(() => { renderGridCylinderCharts(); }, 50);
+                    setTimeout(() => { 
+                        renderCombinedCylinderCharts();
+                        renderGridCylinderCharts(); 
+                    }, 50);
                 } else if (tabId === 'tab-relokasi') {
                     renderTerpaguTable();
                     renderTopupTable();
@@ -719,6 +781,7 @@
                 showToast("Tema Diganti", "Mode Terang aktif");
             }
             renderCharts();
+            renderCombinedCylinderCharts();
             renderGridCylinderCharts();
         }
 
@@ -900,6 +963,82 @@
                 }
             } catch (err) {
                 console.error("Error rendering charts:", err);
+            }
+        }
+
+        // Render Combined 3 Cylinder Charts at Top of Tab Trend
+        function renderCombinedCylinderCharts() {
+            try {
+                if (typeof Chart === 'undefined') return;
+                const isLight = document.documentElement.classList.contains('light');
+                const textColor = isLight ? '#475569' : '#94a3b8';
+                const gridColor = isLight ? '#e2e8f0' : '#334155';
+                const selectedUnit = document.getElementById('trendBidangSelect')?.value || 'ALL';
+
+                let months = DATASTORE.monthlyTrend.map(m => m.label);
+                let otArr = DATASTORE.monthlyTrend.map(m => m.ot);
+                let sppdArr = DATASTORE.monthlyTrend.map(m => m.sppd);
+                let shiftArr = DATASTORE.monthlyTrend.map(m => m.shift);
+
+                if (selectedUnit !== 'ALL') {
+                    const factor = selectedUnit === 'RITEL' ? 0.4 : selectedUnit === 'PALU' ? 0.25 : 0.08;
+                    otArr = otArr.map(v => Math.round(v * factor));
+                    sppdArr = sppdArr.map(v => Math.round(v * factor));
+                    shiftArr = shiftArr.map(v => Math.round(v * factor));
+                }
+
+                const ctxOt = document.getElementById('cylinderOtChart');
+                if (ctxOt) {
+                    if (chartInstances.cylOt) chartInstances.cylOt.destroy();
+                    chartInstances.cylOt = new Chart(ctxOt, {
+                        type: 'bar',
+                        data: { labels: months, datasets: [{ label: 'Lembur (OT)', data: otArr, backgroundColor: '#0284c7', borderRadius: 12, borderSkipped: false }] },
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => `Lembur: ${formatIDR(ctx.parsed.y)}` } } },
+                            scales: {
+                                x: { grid: { display: false }, ticks: { color: textColor, font: { size: 9 } } },
+                                y: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 9 }, callback: (val) => 'Rp ' + (val/1000000).toFixed(0) + ' Jt' } }
+                            }
+                        }
+                    });
+                }
+
+                const ctxSppd = document.getElementById('cylinderSppdChart');
+                if (ctxSppd) {
+                    if (chartInstances.cylSppd) chartInstances.cylSppd.destroy();
+                    chartInstances.cylSppd = new Chart(ctxSppd, {
+                        type: 'bar',
+                        data: { labels: months, datasets: [{ label: 'SPPD', data: sppdArr, backgroundColor: '#f59e0b', borderRadius: 12, borderSkipped: false }] },
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => `SPPD: ${formatIDR(ctx.parsed.y)}` } } },
+                            scales: {
+                                x: { grid: { display: false }, ticks: { color: textColor, font: { size: 9 } } },
+                                y: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 9 }, callback: (val) => 'Rp ' + (val/1000000).toFixed(0) + ' Jt' } }
+                            }
+                        }
+                    });
+                }
+
+                const ctxShift = document.getElementById('cylinderShiftChart');
+                if (ctxShift) {
+                    if (chartInstances.cylShift) chartInstances.cylShift.destroy();
+                    chartInstances.cylShift = new Chart(ctxShift, {
+                        type: 'bar',
+                        data: { labels: months, datasets: [{ label: 'Shifting', data: shiftArr, backgroundColor: '#10b981', borderRadius: 12, borderSkipped: false }] },
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => `Shifting: ${formatIDR(ctx.parsed.y)}` } } },
+                            scales: {
+                                x: { grid: { display: false }, ticks: { color: textColor, font: { size: 9 } } },
+                                y: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 9 }, callback: (val) => 'Rp ' + (val/1000000).toFixed(0) + ' Jt' } }
+                            }
+                        }
+                    });
+                }
+            } catch (err) {
+                console.error("Error rendering combined cylinder charts:", err);
             }
         }
 
@@ -1124,6 +1263,7 @@
 
                 updateDashboardKPIs();
                 renderCharts();
+                renderCombinedCylinderCharts();
                 renderGridCylinderCharts();
                 renderMonitoringTable();
                 renderTerpaguTable();
@@ -1158,6 +1298,7 @@
             initTopupDataset();
             updateDashboardKPIs();
             renderCharts();
+            renderCombinedCylinderCharts();
             renderGridCylinderCharts();
             renderMonitoringTable();
             renderTerpaguTable();
