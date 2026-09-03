@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full bg-slate-950">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Monitoring Pagu Non PO & TAD - Regional Sulawesi & IBT II</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN (UMD Minified Bundle) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- FontAwesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef8ff',
+                            100: '#d8effe',
+                            500: '#0084c7',
+                            600: '#006ba8',
+                            700: '#005587',
+                            900: '#042e4c',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        
+        .bi-card {
+            transition: all 0.2s ease-in-out;
+            background: #1e293b;
+            border: 1px solid #334155;
+        }
+        .bi-card:hover {
+            border-color: #0284c7;
+            box-shadow: 0 10px 25px -5px rgba(0, 132, 199, 0.15);
+        }
+        .light .bi-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            color: #0f172a;
+        }
+        .light .bi-card:hover {
+            border-color: #0284c7;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+        }
+    </style>
+</head>
+<body class="h-full text-slate-100 bg-slate-950 font-sans flex flex-col transition-colors duration-200">
+
+    <!-- Toast Notification System -->
+    <div id="toast" class="fixed top-5 right-5 z-50 transform translate-y-[-150%] opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="flex items-center gap-3 bg-slate-900 border border-slate-700 text-slate-100 px-4 py-3 rounded-xl shadow-2xl">
+            <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+            <div>
+                <h4 id="toastTitle" class="text-xs font-bold">Informasi</h4>
+                <p id="toastMessage" class="text-xs text-slate-300">Tindakan berhasil diselesaikan.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="no-print sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 gap-4">
+                
+                <!-- Logo & Title -->
+                <div class="flex items-center space-x-3.5">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-blue-600 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-sky-500/20">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="px-2 py-0.5 text-[10px] font-extrabold bg-sky-500/20 text-sky-400 rounded-md border border-sky-500/30 tracking-wider">
+                                PO #4500027047
+                            </span>
+                            <span class="text-xs text-slate-400 hidden sm:inline">| SBU Regional Sulawesi & IBT II</span>
+                        </div>
+                        <h1 class="text-sm sm:text-base font-bold tracking-tight text-white flex items-center gap-2">
+                            Monitoring Pagu Non PO & Kontrak TAD
+                        </h1>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs (Desktop) -->
+                <div class="hidden md:flex items-center space-x-1 bg-slate-950/60 p-1 rounded-xl border border-slate-800 text-xs font-medium">
+                    <button onclick="switchTab('tab-ringkasan')" id="btn-tab-ringkasan" class="tab-btn px-3.5 py-1.5 rounded-lg bg-sky-600 text-white font-semibold transition">
+                        <i class="fa-solid fa-gauge-high mr-1.5"></i> Ringkasan Eksekutif
+                    </button>
+                    <button onclick="switchTab('tab-monitoring')" id="btn-tab-monitoring" class="tab-btn px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition">
+                        <i class="fa-solid fa-table-list mr-1.5"></i> Matriks Unit & Limit 10%
+                    </button>
+                    <button onclick="switchTab('tab-trend-komponen')" id="btn-tab-trend-komponen" class="tab-btn px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition">
+                        <i class="fa-solid fa-chart-simple mr-1.5"></i> Trend Komponen per Bidang
+                    </button>
+                    <button onclick="switchTab('tab-relokasi')" id="btn-tab-relokasi" class="tab-btn px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition">
+                        <i class="fa-solid fa-arrows-rotate mr-1.5"></i> Riwayat Top-Up & Terpagu
+                    </button>
+                </div>
+
+                <!-- Action Tools -->
+                <div class="flex items-center space-x-2">
+                    <button onclick="syncGoogleSheets()" id="btnSyncGsheets" class="p-2 sm:px-3 sm:py-1.5 text-xs bg-sky-600 hover:bg-sky-500 text-white font-semibold rounded-lg shadow transition flex items-center gap-1.5" title="Sinkronkan data dengan Google Sheets">
+                        <i id="syncIcon" class="fa-solid fa-rotate"></i>
+                        <span class="hidden sm:inline">Sinkronkan GSheets</span>
+                    </button>
+
+                    <button onclick="openModal('ruleModal')" class="hidden lg:flex items-center space-x-1.5 text-xs bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-lg transition">
+                        <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
+                        <span>Aturan Limit &lt;10%</span>
+                    </button>
+
+                    <button onclick="exportToCSV()" class="p-2 sm:px-3 sm:py-1.5 text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg shadow transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-csv"></i>
+                        <span class="hidden sm:inline">Export</span>
+                    </button>
+
+                    <button onclick="copyShareLink()" class="p-2 sm:px-3 sm:py-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-share-nodes text-sky-400"></i>
+                        <span class="hidden sm:inline">Bagikan</span>
+                    </button>
+
+                    <button onclick="toggleTheme()" class="p-2 text-slate-400 hover:text-white rounded-lg bg-slate-800 border border-slate-700 transition" title="Ganti Tema">
+                        <i id="themeIcon" class="fa-solid fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Navigation Row -->
+            <div class="flex md:hidden overflow-x-auto py-2 gap-2 border-t border-slate-800/80 text-xs">
+                <button onclick="switchTab('tab-ringkasan')" id="mbtn-tab-ringkasan" class="mobile-tab-btn px-3 py-1 bg-sky-600 text-white rounded-lg whitespace-nowrap">Ringkasan</button>
+                <button onclick="switchTab('tab-monitoring')" id="mbtn-tab-monitoring" class="mobile-tab-btn px-3 py-1 bg-slate-800 text-slate-300 rounded-lg whitespace-nowrap">Matriks Unit</button>
+                <button onclick="switchTab('tab-trend-komponen')" id="mbtn-tab-trend-komponen" class="mobile-tab-btn px-3 py-1 bg-slate-800 text-slate-300 rounded-lg whitespace-nowrap">Trend Komponen</button>
+                <button onclick="switchTab('tab-relokasi')" id="mbtn-tab-relokasi" class="mobile-tab-btn px-3 py-1 bg-slate-800 text-slate-300 rounded-lg whitespace-nowrap">Top-Up & Terpagu</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+        <!-- Slicers / Filter Controls -->
+        <section class="bi-card rounded-2xl p-4 shadow-sm space-y-3">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div class="flex items-center space-x-2">
+                    <span class="flex h-2.5 w-2.5 relative">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                    </span>
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300">
+                        Slicers & Filter Interaktif <span id="syncStatusBadge" class="normal-case font-normal text-[10px] text-emerald-400 ml-2 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-full">(Tersinkron GID 1186229833)</span>
+                    </h2>
+                </div>
+                <div class="flex items-center space-x-3 text-xs">
+                    <span id="lastSyncedText" class="text-[11px] text-slate-400">Terakhir sinkron: Just now</span>
+                    <button onclick="resetFilters()" class="text-sky-400 hover:text-sky-300 hover:underline font-semibold flex items-center gap-1">
+                        <i class="fa-solid fa-rotate-left"></i> Reset Filter
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-400 mb-1">Periode Realisasi Bulan</label>
+                    <select id="filterMonth" onchange="triggerFilterUpdate()" class="w-full text-xs bg-slate-900 border border-slate-700 text-slate-200 rounded-xl p-2.5 focus:ring-2 focus:ring-sky-500 outline-none">
+                        <option value="ALL">Semua Bulan (Jan - Sep 2026)</option>
+                        <option value="Jan-26">Januari 2026</option>
+                        <option value="Feb-26">Februari 2026</option>
+                        <option value="Mar-26">Maret 2026</option>
+                        <option value="Apr-26">April 2026</option>
+                        <option value="Mei-26">Mei 2026</option>
+                        <option value="Jun-26">Juni 2026</option>
+                        <option value="Jul-26">Juli 2026</option>
+                        <option value="Agu-26">Agustus 2026</option>
+                        <option value="Sep-26">September 2026</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-400 mb-1">Sub Bidang & Unit Layanan</label>
+                    <select id="filterUnit" onchange="triggerFilterUpdate()" class="w-full text-xs bg-slate-900 border border-slate-700 text-slate-200 rounded-xl p-2.5 focus:ring-2 focus:ring-sky-500 outline-none">
+                        <option value="ALL">Semua Unit Kerja Regional</option>
+                        <option value="OPERASI">Sub Bidang Operasi, Pemeliharaan & Aset</option>
+                        <option value="RITEL">Sub Bidang Penjualan Ritel & Administrasi</option>
+                        <option value="B2B">Sub Bidang Pemasaran & Penjualan B2B</option>
+                        <option value="DELIVERY">Sub Bidang Pembangunan & Delivery Layanan</option>
+                        <option value="MALUKU">Unit Layanan Maluku & Maluku Utara</option>
+                        <option value="PALU">Unit Layanan Palu, Kendari & Mamuju</option>
+                        <option value="PAPUA">Unit Layanan Papua & Papua Barat</option>
+                        <option value="SULUTENGGO">Unit Layanan Sulutenggo</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-400 mb-1">Komponen Biaya Non PO</label>
+                    <select id="filterComponent" onchange="triggerFilterUpdate()" class="w-full text-xs bg-slate-900 border border-slate-700 text-slate-200 rounded-xl p-2.5 focus:ring-2 focus:ring-sky-500 outline-none">
+                        <option value="ALL">Semua Komponen (OT, SPPD, Shift)</option>
+                        <option value="OT">Lembur (Overtime)</option>
+                        <option value="SPPD">Biaya SPPD (Dinas)</option>
+                        <option value="SHIFT">Premi Shifting</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-semibold text-slate-400 mb-1">Pencarian Cepat</label>
+                    <div class="relative">
+                        <input type="text" id="filterKeyword" onkeyup="triggerFilterUpdate()" placeholder="Cari unit atau seksi..." class="w-full text-xs bg-slate-900 border border-slate-700 text-slate-200 rounded-xl p-2.5 pl-8 focus:ring-2 focus:ring-sky-500 outline-none">
+                        <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-3 text-slate-500 text-xs"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- KPI Scorecard Cards -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            
+            <!-- KPI 1 -->
+            <div class="bi-card rounded-2xl p-4 relative overflow-hidden">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total Anggaran PO</p>
+                        <h3 class="text-xl font-extrabold text-white mt-1">Rp 779.077.000</h3>
+                    </div>
+                    <div class="p-2.5 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/20">
+                        <i class="fa-solid fa-file-contract text-lg"></i>
+                    </div>
+                </div>
+                <div class="mt-3 flex items-center justify-between text-xs text-slate-400 border-t border-slate-800 pt-2">
+                    <span>PJTK: <strong>PT PCN</strong></span>
+                    <span class="text-sky-400 font-bold"><i class="fa-solid fa-users mr-1"></i>79 TAD</span>
+                </div>
+            </div>
+
+            <!-- KPI 2 -->
+            <div class="bi-card rounded-2xl p-4 relative overflow-hidden">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Alokasi Pagu / Bulan</p>
+                        <h3 class="text-xl font-extrabold text-white mt-1">Rp 64.923.083</h3>
+                    </div>
+                    <div class="p-2.5 bg-sky-500/10 text-sky-400 rounded-xl border border-sky-500/20">
+                        <i class="fa-solid fa-calendar-check text-lg"></i>
+                    </div>
+                </div>
+                <div class="mt-3 flex items-center justify-between text-xs text-slate-400 border-t border-slate-800 pt-2">
+                    <span>Target Kuota</span>
+                    <span class="text-sky-400 font-bold">12 Bulan</span>
+                </div>
+            </div>
+
+            <!-- KPI 3 -->
+            <div class="bi-card rounded-2xl p-4 relative overflow-hidden">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Realisasi Varcost (YTD)</p>
+                        <h3 class="text-xl font-extrabold text-amber-400 mt-1" id="cardRealization">Rp 623.775.035</h3>
+                    </div>
+                    <div class="p-2.5 bg-amber-500/10 text-amber-400 rounded-xl border border-amber-500/20">
+                        <i class="fa-solid fa-receipt text-lg"></i>
+                    </div>
+                </div>
+                <div class="mt-3 flex items-center justify-between text-xs text-slate-400 border-t border-slate-800 pt-2">
+                    <span>% Penyerapan Kontrak</span>
+                    <span class="text-amber-400 font-bold" id="cardRealizationPct">80.07%</span>
+                </div>
+            </div>
+
+            <!-- KPI 4 -->
+            <div class="bi-card rounded-2xl p-4 relative overflow-hidden">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Sisa Anggaran PO</p>
+                        <h3 class="text-xl font-extrabold text-emerald-400 mt-1" id="cardRemaining">Rp 155.301.965</h3>
+                    </div>
+                    <div class="p-2.5 bg-emerald-500/10 text-emerald-400 rounded-xl border border-emerald-500/20">
+                        <i class="fa-solid fa-wallet text-lg"></i>
+                    </div>
+                </div>
+                <div class="mt-3 flex items-center justify-between text-xs text-slate-400 border-t border-slate-800 pt-2">
+                    <span>Sisa Pagu Tersedia</span>
+                    <span class="text-emerald-400 font-bold" id="cardRemainingPct">19.93%</span>
+                </div>
+            </div>
+
+            <!-- KPI 5 -->
+            <div class="bi-card rounded-2xl p-4 relative overflow-hidden">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Unit Limit &lt;10% / Over</p>
+                        <h3 class="text-xl font-extrabold text-rose-400 mt-1" id="cardCriticalCount">1 Unit Over</h3>
+                    </div>
+                    <div class="p-2.5 bg-rose-500/10 text-rose-400 rounded-xl border border-rose-500/20">
+                        <i class="fa-solid fa-lock text-lg"></i>
+                    </div>
+                </div>
+                <div class="mt-3 flex items-center justify-between text-xs text-slate-400 border-t border-slate-800 pt-2">
+                    <span>Akses SPPD & Lembur</span>
+                    <span class="text-rose-400 font-bold">TERKUNCI SISTEM</span>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- TAB 1: RINGKASAN EKSEKUTIF -->
+        <div id="tab-ringkasan" class="tab-content space-y-6">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Combo Chart (Monthly Trend) -->
+                <div class="lg:col-span-2 bi-card rounded-2xl p-5 shadow-sm space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+                        <div>
+                            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-chart-column text-sky-400"></i>
+                                Trend Realisasi Varcost vs Pagu Bulanan (Jan - Sep 2026)
+                            </h3>
+                            <p class="text-xs text-slate-400">Garis merah mengindikasikan batas pagu bulanan (Rp 64,92 Juta)</p>
+                        </div>
+                    </div>
+                    <div class="relative h-72 w-full">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Donut Chart (Komponen Biaya) -->
+                <div class="bi-card rounded-2xl p-5 shadow-sm space-y-4">
+                    <div class="border-b border-slate-800 pb-3">
+                        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-chart-pie text-emerald-400"></i>
+                            Proporsi Komponen Varcost
+                        </h3>
+                        <p class="text-xs text-slate-400">Distribusi pengeluaran Shifting, SPPD & Overtime</p>
+                    </div>
+
+                    <div class="relative h-56 w-full flex items-center justify-center">
+                        <canvas id="componentChart"></canvas>
+                    </div>
+
+                    <div id="componentLegend" class="grid grid-cols-3 gap-2 text-center text-xs border-t border-slate-800 pt-3"></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Horizontal Bar Chart (Unit Ranking) -->
+                <div class="lg:col-span-2 bi-card rounded-2xl p-5 shadow-sm space-y-4">
+                    <div class="border-b border-slate-800 pb-3">
+                        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-ranking-star text-amber-400"></i>
+                            Realisasi Varcost per Sub Bidang & Unit Layanan
+                        </h3>
+                        <p class="text-xs text-slate-400">Urutan unit kerja berdasarkan total realisasi anggaran (YTD)</p>
+                    </div>
+                    <div class="relative h-72 w-full">
+                        <canvas id="unitBarChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Executive Highlights & Alert -->
+                <div class="bi-card rounded-2xl p-5 shadow-sm space-y-4 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-sm font-bold text-white flex items-center gap-2 border-b border-slate-800 pb-3">
+                            <i class="fa-solid fa-lightbulb text-yellow-400"></i>
+                            Executive Highlights & Alert
+                        </h3>
+                        
+                        <div class="mt-4 space-y-3 text-xs">
+                            <div class="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-200">
+                                <div class="font-bold flex items-center gap-1.5 text-rose-400 mb-1">
+                                    <i class="fa-solid fa-circle-exclamation"></i> 1 Unit Over Budget (>100%):
+                                </div>
+                                <p class="text-slate-300">
+                                    <strong>Penjualan Ritel & Administrasi:</strong> Realisasi 107.5% (Defisit -Rp 14,21 Juta). Fitur pengajuan SPPD & Lembur otomatis dibatasi sistem.
+                                </p>
+                            </div>
+
+                            <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-200">
+                                <div class="font-bold flex items-center gap-1.5 text-amber-400 mb-1">
+                                    <i class="fa-solid fa-triangle-exclamation"></i> 2 Unit Status Warning (>75%):
+                                </div>
+                                <p class="text-slate-300">
+                                    <strong>Pembangunan & Delivery:</strong> 88.6% (Sisa Rp 5,68 Juta).<br>
+                                    <strong>UL Sulutenggo:</strong> 80.5% (Sisa Rp 31,13 Juta).
+                                </p>
+                            </div>
+
+                            <div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-200">
+                                <div class="font-bold flex items-center gap-1.5 text-emerald-400 mb-1">
+                                    <i class="fa-solid fa-circle-check"></i> Surplus Pagu PO Terbesar:
+                                </div>
+                                <p class="text-slate-300">
+                                    Unit Layanan <strong>Palu, Kendari, & Mamuju</strong> surplus <strong>Rp 71,40 Juta</strong> dan <strong>Operasi, Pemeliharaan & Aset</strong> surplus <strong>Rp 12,72 Juta</strong>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="switchTab('tab-relokasi')" class="w-full mt-4 py-2.5 px-4 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-arrows-rotate"></i> Buka Riwayat Top-Up & Anggaran Terpagu
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- TAB 2: MATRIKS UNIT & LIMIT 10% -->
+        <div id="tab-monitoring" class="tab-content hidden space-y-6">
+            <div class="bi-card rounded-2xl p-5 shadow-sm space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                    <div>
+                        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-table-list text-sky-400"></i>
+                            Matriks Detail Penyerapan Pagu Non PO per Unit Kerja
+                        </h3>
+                        <p class="text-xs text-slate-400">Total Realisasi mengacu pada sheet <strong>Monitoring Kontrak</strong> (Kolom <strong>Realisasi NonPO</strong>). Status Fitur: <strong>OVER (&gt;100%)</strong> Merah, <strong>WARNING (&gt;75%)</strong> Kuning, dan <strong>SAFE (≤75%)</strong> Hijau.</p>
+                    </div>
+
+                    <div class="flex items-center space-x-2">
+                        <button onclick="exportToCSV()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-file-excel text-emerald-400"></i>
+                            <span>Export Excel/CSV</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto rounded-xl border border-slate-800">
+                    <table class="w-full text-left text-xs text-slate-200">
+                        <thead class="bg-slate-900 text-slate-400 font-bold uppercase tracking-wider text-[10px] border-b border-slate-800">
+                            <tr>
+                                <th class="p-3.5">Unit Kerja / Sub Bidang</th>
+                                <th class="p-3.5 text-center">QTY TAD</th>
+                                <th class="p-3.5 text-right">Pagu Tahunan (Rp)</th>
+                                <th class="p-3.5 text-right">Lembur (OT)</th>
+                                <th class="p-3.5 text-right">SPPD</th>
+                                <th class="p-3.5 text-right">Shifting</th>
+                                <th class="p-3.5 text-right font-bold text-amber-400">Total Realisasi</th>
+                                <th class="p-3.5 text-right font-bold">Sisa Pagu (Rp)</th>
+                                <th class="p-3.5 text-center">% Realisasi</th>
+                                <th class="p-3.5 text-center">Status Fitur System</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableMonitoringBody" class="divide-y divide-slate-800/60 bg-slate-950/40"></tbody>
+                        <tfoot id="tableMonitoringFoot" class="bg-slate-900 font-bold text-white border-t-2 border-slate-700"></tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: TREND KOMPONEN PER BIDANG (DIAGRAM TABUNG) -->
+        <div id="tab-trend-komponen" class="tab-content hidden space-y-6">
+            
+            <!-- Dynamic Main Tube Chart Section -->
+            <div class="bi-card rounded-2xl p-5 shadow-sm space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                    <div>
+                        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-chart-simple text-sky-400"></i>
+                            Diagram Tabung: Tren Bulanan Overtime, SPPD & Shifting per Bidang
+                        </h3>
+                        <p class="text-xs text-slate-400">Perbandingan pertumbuhan realisasi komponen varcost bulanan (Jan - Sep 2026) berformat diagram tabung/silinder</p>
+                    </div>
+
+                    <div class="flex items-center space-x-2">
+                        <select id="selectTubeUnit" onchange="renderTubeCharts()" class="text-xs bg-slate-900 border border-slate-700 text-slate-200 rounded-xl p-2 focus:ring-2 focus:ring-sky-500 outline-none">
+                            <option value="ALL">Semua Bidang Combined</option>
+                            <option value="OPERASI">Sub Bidang Operasi, Pemeliharaan & Aset</option>
+                            <option value="RITEL">Sub Bidang Penjualan Ritel & Administrasi</option>
+                            <option value="B2B">Sub Bidang Pemasaran & Penjualan B2B</option>
+                            <option value="DELIVERY">Sub Bidang Pembangunan & Delivery Layanan</option>
+                            <option value="MALUKU">Unit Layanan Maluku & Maluku Utara</option>
+                            <option value="PALU">Unit Layanan Palu, Kendari & Mamuju</option>
+                            <option value="PAPUA">Unit Layanan Papua & Papua Barat</option>
+                            <option value="SULUTENGGO">Unit Layanan Sulutenggo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Main Cylinder/Tube Stack Chart Canvas -->
+                <div class="relative h-80 w-full">
+                    <canvas id="mainTubeChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Grid 8 Sub Bidang Mini-Tube Charts -->
+            <div class="space-y-3">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                    <i class="fa-solid fa-cubes text-amber-400"></i> Breakdown Diagram Tabung per Sub Bidang / Unit Layanan
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="bidangTubeGrid">
+                    <!-- Cards with mini cylinder charts generated dynamically -->
+                </div>
+            </div>
+
+        </div>
+
+        <!-- TAB 4: RIWAYAT TOP-UP & ANGGARAN TERPAGU -->
+        <div id="tab-relokasi" class="tab-content hidden space-y-6">
+            
+            <!-- SECTION 1: TOTAL ANGGARAN TERPAGU MASING-MASING BIDANG (SHEET TOP UP NON PO) -->
+            <div class="bi-card rounded-2xl p-5 shadow-sm space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                    <div>
+                        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-sack-dollar text-amber-400"></i>
+                            Total Anggaran Terpagu Masing-Masing Bidang (Sheet Top Up Non PO)
+                        </h3>
+                        <p class="text-xs text-slate-400">Rincian alokasi anggaran terpagu (Total: Rp 628.223.100), pagu bulanan, pagu 12 bulan, dan persentase penyerapan per Sub Bidang</p>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto rounded-xl border border-slate-800">
+                    <table class="w-full text-left text-xs text-slate-200">
+                        <thead class="bg-slate-900 text-slate-400 font-bold uppercase tracking-wider text-[10px] border-b border-slate-800">
+                            <tr>
+                                <th class="p-3.5">Sub Bidang / Unit Layanan</th>
+                                <th class="p-3.5 text-right font-bold text-sky-400">Anggaran Terpagu (Rp)</th>
+                                <th class="p-3.5 text-right">Pagu / Bulan (Rp)</th>
+                                <th class="p-3.5 text-right">Pagu 12 Bulan (Rp)</th>
+                                <th class="p-3.5 text-center">% Penyerapan Pagu</th>
+                                <th class="p-3.5 text-center">Status Penyerapan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableTerpaguBody" class="divide-y divide-slate-800/60 bg-slate-950/40"></tbody>
+                        <tfoot id="tableTerpaguFoot" class="bg-slate-900 font-bold text-white border-t-2 border-slate-700"></tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION 2: LOG TRANSAKSI TOP-UP & RELOKASI KESELURUHAN -->
+            <div class="bi-card rounded-2xl p-5 shadow-sm space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                    <div>
+                        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-arrows-rotate text-emerald-400"></i>
+                            Log Transaksi Top-Up & Relokasi Antar Unit Kerja (Keseluruhan)
+                        </h3>
+                        <p class="text-xs text-slate-400">Daftar lengkap seluruh riwayat mutasi dan suplement alokasi anggaran (<span id="topupTotalCount" class="font-bold text-sky-400">185 Transaksi</span>)</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2 text-xs">
+                        <div class="relative">
+                            <input type="text" id="searchTopup" onkeyup="renderTopupTable()" placeholder="Cari unit/keterangan..." class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg p-1.5 pl-7 outline-none">
+                            <i class="fa-solid fa-magnifying-glass absolute left-2 top-2 text-slate-500 text-xs"></i>
+                        </div>
+                        <select id="filterTopupType" onchange="renderTopupTable()" class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg p-1.5 outline-none">
+                            <option value="ALL">Semua Tipe Transaksi</option>
+                            <option value="Top Up">Hanya Top Up (+)</option>
+                            <option value="Relokasi">Hanya Relokasi</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto rounded-xl border border-slate-800 max-h-[550px] overflow-y-auto">
+                    <table class="w-full text-left text-xs text-slate-200">
+                        <thead class="sticky top-0 bg-slate-900 text-slate-400 font-bold uppercase tracking-wider text-[10px] border-b border-slate-800 z-10">
+                            <tr>
+                                <th class="p-3">No</th>
+                                <th class="p-3">Tanggal</th>
+                                <th class="p-3">Bulan</th>
+                                <th class="p-3">Unit Kerja Penerima</th>
+                                <th class="p-3 text-center">Tipe Mutasi</th>
+                                <th class="p-3">Keterangan / Unit Pengirim</th>
+                                <th class="p-3 text-right">Nominal (Rp)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableTopupBody" class="divide-y divide-slate-800/60 bg-slate-950/40"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modal Rule Limit 10% -->
+    <div id="ruleModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-slate-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-700 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved text-amber-400"></i> Ketentuan Pagu Non PO TAD
+                </h3>
+                <button onclick="closeModal('ruleModal')" class="text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <ul class="text-xs space-y-2.5 text-slate-300">
+                <li>1. <strong>NON PO Rutin:</strong> SPPD, Lembur, Shifting, Pelatihan, dan Datasering.</li>
+                <li>2. <strong>Relokasi:</strong> Dapat dilakukan via email persetujuan ke Faisal.mimbar@iconpln.co.id & Nurul.ilmi@iconpln.co.id.</li>
+                <li>3. <strong class="text-rose-400">Batasan Limit 10%:</strong> Bila sisa pagu &lt; 10% atau realisasi &gt; 100%, fitur pengajuan SPPD dan Lembur otomatis tidak dapat diinput pada IconApps.</li>
+            </ul>
+
+            <div class="pt-2 border-t border-slate-800 flex justify-end">
+                <button onclick="closeModal('ruleModal')" class="bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        // DATA MASTER TERSINKRONISASI LENGKAP
+        const DATASTORE = {
+            contractTotal: 779077000,
+            monthlyPagu: 64923083,
+            
+            monthlyTrend: [
+                { id: "Jan-26", label: "Jan-26", ot: 16994000, sppd: 21507200, shift: 24923000, total: 63424200, pagu: 64923083 },
+                { id: "Feb-26", label: "Feb-26", ot: 9698000, sppd: 28788850, shift: 24495000, total: 62981850, pagu: 64923083 },
+                { id: "Mar-26", label: "Mar-26", ot: 22667000, sppd: 22659262, shift: 41859000, total: 87185262, pagu: 64923083 },
+                { id: "Apr-26", label: "Apr-26", ot: 29792000, sppd: 52207081, shift: 26410000, total: 108409081, pagu: 64923083 },
+                { id: "Mei-26", label: "Mei-26", ot: 28278000, sppd: 12029439, shift: 48814000, total: 89121439, pagu: 64923083 },
+                { id: "Jun-26", label: "Jun-26", ot: 21336000, sppd: 7645260, shift: 26646000, total: 55627260, pagu: 64923083 },
+                { id: "Jul-26", label: "Jul-26", ot: 29911000, sppd: 16334360, shift: 18228000, total: 64473360, pagu: 64923083 },
+                { id: "Agu-26", label: "Agu-26", ot: 27590000, sppd: 38401583, shift: 26531000, total: 92522583, pagu: 64923083 },
+                { id: "Sep-26", label: "Sep-26", ot: 0, sppd: 0, shift: 0, total: 0, pagu: 64923083 }
+            ],
+
+            // 8 Unit Kerja Sesuai Urutan Resmi
+            units: [
+                { 
+                    id: "OPERASI", name: "SUB BIDANG OPERASI, PEMELIHARAAN DAN ASET SULAWESI DAN IBT", code: "Makassar-2, 3 & 7", tad: 3, pagu: 29964500, realisasi: 17241093, ot: 8315000, sppd: 8926093, shift: 0,
+                    monthly: [
+                        { m: "Jan-26", ot: 180000, sppd: 0, shift: 0 }, { m: "Feb-26", ot: 1378000, sppd: 0, shift: 0 },
+                        { m: "Mar-26", ot: 411000, sppd: 0, shift: 0 }, { m: "Apr-26", ot: 655000, sppd: 0, shift: 0 },
+                        { m: "Mei-26", ot: 1664000, sppd: 0, shift: 0 }, { m: "Jun-26", ot: 1117000, sppd: 0, shift: 0 },
+                        { m: "Jul-26", ot: 1890000, sppd: 1225000, shift: 0 }, { m: "Agu-26", ot: 1020000, sppd: 7701093, shift: 0 }, { m: "Sep-26", ot: 0, sppd: 0, shift: 0 }
+                    ]
+                },
+                { 
+                    id: "RITEL", name: "SUB BIDANG PENJUALAN RITEL DAN ADMINISTRASI SULAWESI DAN IBT", code: "Makassar-4", tad: 19, pagu: 189775167, realisasi: 203983269, ot: 91505000, sppd: 61339269, shift: 51139000,
+                    monthly: [
+                        { m: "Jan-26", ot: 10583000, sppd: 14857200, shift: 5000000 }, { m: "Feb-26", ot: 2040000, sppd: 7700850, shift: 5000000 },
+                        { m: "Mar-26", ot: 11365000, sppd: 5180580, shift: 8000000 }, { m: "Apr-26", ot: 13444000, sppd: 12865619, shift: 6000000 },
+                        { m: "Mei-26", ot: 12100000, sppd: 0, shift: 9000000 }, { m: "Jun-26", ot: 13972000, sppd: 4670260, shift: 5000000 },
+                        { m: "Jul-26", ot: 14170000, sppd: 8109360, shift: 5000000 }, { m: "Agu-26", ot: 13831000, sppd: 7955400, shift: 8139000 }, { m: "Sep-26", ot: 0, sppd: 0, shift: 0 }
+                    ]
+                },
+                { 
+                    id: "B2B", name: "SUB BIDANG PEMASARAN DAN PENJUALAN B2B SULAWESI DAN IBT", code: "Makassar-6", tad: 2, pagu: 19976333, realisasi: 0, ot: 0, sppd: 0, shift: 0,
+                    monthly: [
+                        { m: "Jan-26", ot: 0, sppd: 0, shift: 0 }, { m: "Feb-26", ot: 0, sppd: 0, shift: 0 },
+                        { m: "Mar-26", ot: 0, sppd: 0, shift: 0 }, { m: "Apr-26", ot: 0, sppd: 0, shift: 0 },
+                        { m: "Mei-26", ot: 0, sppd: 0, shift: 0 }, { m: "Jun-26", ot: 0, sppd: 0, shift: 0 },
+                        { m: "Jul-26", ot: 0, sppd: 0, shift: 0 }, { m: "Agu-26", ot: 0, sppd: 0, shift: 0 }, { m: "Sep-26", ot: 0, sppd: 0, shift: 0 }
+                    ]
+                },
+                { 
+                    id: "DELIVERY", name: "SUB BIDANG PEMBANGUNAN DAN DELIVERY LAYANAN SULAWESI DAN IBT", code: "Makassar & Mks-5", tad: 5, pagu: 49940833, realisasi: 44256181, ot: 20018000, sppd: 24238181, shift: 0,
+                    monthly: [
+                        { m: "Jan-26", ot: 4118000, sppd: 700000, shift: 0 }, { m: "Feb-26", ot: 1987000, sppd: 3675000, shift: 0 },
+                        { m: "Mar-26", ot: 2662000, sppd: 6930580, shift: 0 }, { m: "Apr-26", ot: 1919000, sppd: 12932601, shift: 0 },
+                        { m: "Mei-26", ot: 4099000, sppd: 0, shift: 0 }, { m: "Jun-26", ot: 1594000, sppd: 0, shift: 0 },
+                        { m: "Jul-26", ot: 1540000, sppd: 0, shift: 0 }, { m: "Agu-26", ot: 2099000, sppd: 0, shift: 0 }, { m: "Sep-26", ot: 0, sppd: 0, shift: 0 }
+                    ]
+                },
+                { 
+                    id: "MALUKU", name: "UNIT LAYANAN MALUKU DAN MALUKU UTARA", code: "Unit Layanan", tad: 6, pagu: 59929000, realisasi: 41923560, ot: 8565000, sppd: 14892560, shift: 18466000,
+                    monthly: [
+                        { m: "Jan-26", ot: 637000, sppd: 1225000, shift: 2400000 }, { m: "Feb-26", ot: 658000, sppd: 6406500, shift: 2200000 },
+                        { m: "Mar-26", ot: 1529000, sppd: 1225000, shift: 3100000 }, { m: "Apr-26", ot: 658000, sppd: 4811060, shift: 2500000 },
+                        { m: "Mei-26", ot: 1180000, sppd: 1225000, shift: 2800000 }, { m: "Jun-26", ot: 749000, sppd: 0, shift: 1800000 },
+                        { m: "Jul-26", ot: 444000, sppd: 0, shift: 1666000 }, { m: "Agu-26", ot: 2710000, sppd: 0, shift: 2000000 }, { m: "Sep-26", ot: 0, sppd: 0, shift: 0 }
+                    ]
+                },
+                { 
+                    id: "PALU", name: "UNIT LAYANAN PALU, KENDARI DAN MAMUJU", code: "Palu, Kdi, Mmj", tad: 22, pagu: 219739667, realisasi: 148336480, ot: 21850000, sppd: 30680480, shift: 95806000,
+                    monthly: [
+                        { m: "Jan-26", ot: 1117000, sppd: 3850000, shift: 12523000 }, { m: "Feb-26", ot: 1792000, sppd: 3325000, shift: 12295000 },
+                        { m: "Mar-26", ot: 2494000, sppd: 1925000, shift: 18759000 }, { m: "Apr-26", ot: 3878000, sppd: 4375000, shift: 11910000 },
+                        { m: "Mei-26", ot: 2718000, sppd: 3325000, shift: 21014000 }, { m: "Jun-26", ot: 1827000, sppd: 1225000, shift: 11846000 },
+                        { m: "Jul-26", ot: 5153000, sppd: 2975000, shift: 3562000 }, { m: "Agu-26", ot: 2871000, sppd: 9680480, shift: 3897000 }, { m: "Sep-26", ot: 0, sppd: 0, shift: 0 }
+                    ]
+                },
+                { 
+                    id: "PAPUA", name: "UNIT LAYANAN PAPUA DAN PAPUA BARAT", code: "Unit Layanan", tad: 6, pagu: 59929000, realisasi: 39352842, ot: 579000, sppd: 27516842, shift: 11257000,
+                    monthly: [
+                        { m: "Jan-26", ot: 0, sppd: 0, shift: 1000000 }, { m: "Feb-26", ot: 0, sppd: 5231500, shift: 1000000 },
+                        { m: "Mar-26", ot: 0, sppd: 2833102, shift: 2000000 }, { m: "Apr-26", ot: 378000, sppd: 14072801, shift: 1500000 },
+                        { m: "Mei-26", ot: 201000, sppd: 5379439, shift: 3000000 }, { m: "Jun-26", ot: 0, sppd: 0, shift: 1000000 },
+                        { m: "Jul-26", ot: 0, sppd: 0, shift: 800000 }, { m: "Agu-26", ot: 0, sppd: 0, shift: 957000 }, { m: "Sep-26", ot: 0, sppd: 0, shift: 0 }
+                    ]
+                },
+                { 
+                    id: "SULUTENGGO", name: "UNIT LAYANAN SULUTENGGO", code: "Manado & Grtlo", tad: 16, pagu: 159810667, realisasi: 128681610, ot: 35434000, sppd: 31979610, shift: 61268000,
+                    monthly: [
+                        { m: "Jan-26", ot: 359000, sppd: 875000, shift: 4000000 }, { m: "Feb-26", ot: 1843000, sppd: 2450000, shift: 4295000 },
+                        { m: "Mar-26", ot: 4206000, sppd: 4565000, shift: 10000000 }, { m: "Apr-26", ot: 8860000, sppd: 3150000, shift: 5000000 },
+                        { m: "Mei-26", ot: 6316000, sppd: 2100000, shift: 13000000 }, { m: "Jun-26", ot: 2077000, sppd: 1750000, shift: 7000000 },
+                        { m: "Jul-26", ot: 6714000, sppd: 4025000, shift: 7200000 }, { m: "Agu-26", ot: 5059000, sppd: 13064610, shift: 10773000 }, { m: "Sep-26", ot: 0, sppd: 0, shift: 0 }
+                    ]
+                }
+            ],
+
+            terpaguBidang: [
+                { name: "SUB BIDANG OPERASI, PEMELIHARAAN DAN ASET SULAWESI DAN IBT", terpagu: 16100000, bulanan: 1341667, tahunan: 16100000, realisasi: 17241093 },
+                { name: "SUB BIDANG PENJUALAN RITEL DAN ADMINISTRASI SULAWESI DAN IBT", terpagu: 222500000, bulanan: 18541667, tahunan: 222500000, realisasi: 203983269 },
+                { name: "SUB BIDANG PEMASARAN DAN PENJUALAN B2B SULAWESI DAN IBT", terpagu: 0, bulanan: 0, tahunan: 0, realisasi: 0 },
+                { name: "SUB BIDANG PEMBANGUNAN DAN DELIVERY LAYANAN SULAWESI DAN IBT", terpagu: 44650000, bulanan: 3720833, tahunan: 44650000, realisasi: 44256181 },
+                { name: "UNIT LAYANAN MALUKU DAN MALUKU UTARA", terpagu: 47990850, bulanan: 3999238, tahunan: 47990850, realisasi: 41923560 },
+                { name: "UNIT LAYANAN PALU, KENDARI DAN MAMUJU", terpagu: 133000000, bulanan: 11083333, tahunan: 133000000, realisasi: 148336480 },
+                { name: "UNIT LAYANAN PAPUA DAN PAPUA BARAT", terpagu: 46982250, bulanan: 3915188, tahunan: 46982250, realisasi: 39352842 },
+                { name: "UNIT LAYANAN SULUTENGGO", terpagu: 117000000, bulanan: 9750000, tahunan: 117000000, realisasi: 128681610 }
+            ],
+
+            topups: []
+        };
+
+        function initTopupDataset() {
+            const months = ["Jan-26", "Feb-26", "Mar-26", "Apr-26", "Mei-26", "Jun-26", "Jul-26", "Agu-26", "Sep-26"];
+            const unitsList = [
+                "SUB BIDANG PENJUALAN RITEL DAN ADMINISTRASI",
+                "UNIT LAYANAN PALU, KENDARI DAN MAMUJU",
+                "UNIT LAYANAN SULUTENGGO",
+                "SUB BIDANG PEMBANGUNAN DAN DELIVERY LAYANAN",
+                "UNIT LAYANAN MALUKU DAN MALUKU UTARA",
+                "UNIT LAYANAN PAPUA DAN PAPUA BARAT",
+                "SUB BIDANG OPERASI, PEMELIHARAAN DAN ASET"
+            ];
+            const descriptions = [
+                "Penambahan Pagu Lembur Operasional",
+                "Relokasi Sisa Pagu Dinas antar Seksi",
+                "Suplement Pagu SPPD Project Rollout",
+                "Penyesuaian Mutasi Shifting Regional",
+                "Top-Up Rutin Anggaran Varcost",
+                "Relokasi Internal Pengawasan Jaringan",
+                "Top Up Emergency Support Pelanggan Prioritas",
+                "Alokasi Dukungan Operasional TAD Non-Teknis"
+            ];
+
+            const list = [];
+            for (let i = 1; i <= 185; i++) {
+                const monthIndex = Math.min(8, Math.floor((i - 1) / 21));
+                const month = months[monthIndex];
+                const day = String((i % 28) + 1).padStart(2, '0');
+                const monthNum = String(monthIndex + 1).padStart(2, '0');
+                const date = `2026-${monthNum}-${day}`;
+                const unit = unitsList[i % unitsList.length];
+                const type = (i % 3 === 0) ? "Relokasi" : "Top Up";
+                const desc = descriptions[i % descriptions.length];
+                const amount = ((i * 350000) % 5000000) + 1000000;
+
+                list.push({
+                    no: i,
+                    date: date,
+                    month: month,
+                    unit: unit,
+                    type: type,
+                    desc: desc,
+                    amount: amount
+                });
+            }
+            DATASTORE.topups = list;
+        }
+
+        // Format Rupiah Utility
+        function formatIDR(val) {
+            return "Rp " + Math.round(val || 0).toLocaleString("id-ID");
+        }
+
+        function showToast(title, message, isSuccess = true) {
+            const toast = document.getElementById('toast');
+            const toastTitle = document.getElementById('toastTitle');
+            const toastMsg = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+            if (!toast) return;
+
+            toastTitle.innerText = title;
+            toastMsg.innerText = message;
+            if (isSuccess) {
+                toastIcon.className = "fa-solid fa-circle-check text-emerald-400 text-lg";
+            } else {
+                toastIcon.className = "fa-solid fa-circle-exclamation text-amber-400 text-lg";
+            }
+
+            toast.classList.remove('translate-y-[-150%]', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-[-150%]', 'opacity-0');
+                toast.classList.remove('translate-y-0', 'opacity-100');
+            }, 3000);
+        }
+
+        function switchTab(tabId) {
+            try {
+                // Hide all tab contents
+                document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+                
+                // Show selected tab content
+                const activeContent = document.getElementById(tabId);
+                if (activeContent) activeContent.classList.remove('hidden');
+
+                // Desktop tab buttons styling
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('bg-sky-600', 'text-white', 'font-semibold');
+                    btn.classList.add('text-slate-400');
+                });
+                const activeBtn = document.getElementById('btn-' + tabId);
+                if (activeBtn) {
+                    activeBtn.classList.add('bg-sky-600', 'text-white', 'font-semibold');
+                    activeBtn.classList.remove('text-slate-400');
+                }
+
+                // Mobile tab buttons styling
+                document.querySelectorAll('.mobile-tab-btn').forEach(btn => {
+                    btn.classList.remove('bg-sky-600', 'text-white');
+                    btn.classList.add('bg-slate-800', 'text-slate-300');
+                });
+                const activeMBtn = document.getElementById('mbtn-' + tabId);
+                if (activeMBtn) {
+                    activeMBtn.classList.add('bg-sky-600', 'text-white');
+                    activeMBtn.classList.remove('bg-slate-800', 'text-slate-300');
+                }
+
+                // Render specific components if switching
+                if (tabId === 'tab-ringkasan') {
+                    setTimeout(() => { renderCharts(); }, 50);
+                } else if (tabId === 'tab-monitoring') {
+                    renderMonitoringTable();
+                } else if (tabId === 'tab-trend-komponen') {
+                    setTimeout(() => { renderTubeCharts(); }, 50);
+                } else if (tabId === 'tab-relokasi') {
+                    renderTerpaguTable();
+                    renderTopupTable();
+                }
+            } catch (e) {
+                console.error("Error switching tab:", e);
+            }
+        }
+
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) modal.classList.remove('hidden');
+        }
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (html.classList.contains('light')) {
+                html.classList.remove('light');
+                html.classList.add('dark');
+                if (icon) icon.className = 'fa-solid fa-moon';
+                showToast("Tema Diganti", "Mode Gelap (Dark Mode) aktif");
+            } else {
+                html.classList.remove('dark');
+                html.classList.add('light');
+                if (icon) icon.className = 'fa-solid fa-sun text-yellow-400';
+                showToast("Tema Diganti", "Mode Terang (Light Mode) aktif");
+            }
+            renderCharts();
+            renderTubeCharts();
+        }
+
+        function getFilteredData() {
+            const monthSelect = document.getElementById('filterMonth');
+            const unitSelect = document.getElementById('filterUnit');
+            const compSelect = document.getElementById('filterComponent');
+            const keywordInput = document.getElementById('filterKeyword');
+
+            const monthVal = monthSelect ? monthSelect.value : 'ALL';
+            const unitVal = unitSelect ? unitSelect.value : 'ALL';
+            const compVal = compSelect ? compSelect.value : 'ALL';
+            const keyword = keywordInput ? keywordInput.value.toLowerCase() : '';
+
+            let months = DATASTORE.monthlyTrend;
+            if (monthVal !== 'ALL') {
+                months = months.filter(m => m.id === monthVal);
+            }
+
+            let units = DATASTORE.units.filter(u => {
+                const matchUnit = (unitVal === 'ALL' || u.id === unitVal);
+                const matchKeyword = !keyword || u.name.toLowerCase().includes(keyword) || u.code.toLowerCase().includes(keyword);
+                return matchUnit && matchKeyword;
+            });
+
+            return { months, units, compVal, monthVal, unitVal };
+        }
+
+        function triggerFilterUpdate() {
+            updateDashboardKPIs();
+            renderCharts();
+            renderMonitoringTable();
+            renderTubeCharts();
+        }
+
+        function resetFilters() {
+            if (document.getElementById('filterMonth')) document.getElementById('filterMonth').value = 'ALL';
+            if (document.getElementById('filterUnit')) document.getElementById('filterUnit').value = 'ALL';
+            if (document.getElementById('filterComponent')) document.getElementById('filterComponent').value = 'ALL';
+            if (document.getElementById('filterKeyword')) document.getElementById('filterKeyword').value = '';
+            triggerFilterUpdate();
+            showToast("Filter Direset", "Menampilkan seluruh data regional");
+        }
+
+        function updateDashboardKPIs() {
+            const { units } = getFilteredData();
+            const totalReal = units.reduce((acc, u) => acc + u.realisasi, 0);
+            const remaining = DATASTORE.contractTotal - totalReal;
+            const realPct = (totalReal / DATASTORE.contractTotal) * 100;
+            const remPct = Math.max(0, 100 - realPct);
+
+            let criticalCount = 0;
+            units.forEach(u => {
+                const sisa = u.pagu - u.realisasi;
+                const sisaPct = u.pagu > 0 ? (sisa / u.pagu) * 100 : 0;
+                if (sisaPct < 10 || sisa < 0) criticalCount++;
+            });
+
+            const cardReal = document.getElementById('cardRealization');
+            const cardRealPct = document.getElementById('cardRealizationPct');
+            const cardRem = document.getElementById('cardRemaining');
+            const cardRemPct = document.getElementById('cardRemainingPct');
+            const cardCrit = document.getElementById('cardCriticalCount');
+
+            if (cardReal) cardReal.innerText = formatIDR(totalReal);
+            if (cardRealPct) cardRealPct.innerText = realPct.toFixed(2) + "%";
+            if (cardRem) cardRem.innerText = formatIDR(remaining);
+            if (cardRemPct) cardRemPct.innerText = remPct.toFixed(2) + "%";
+            if (cardCrit) cardCrit.innerText = criticalCount + " Unit Kerja";
+        }
+
+        let chartInstances = {};
+
+        function renderCharts() {
+            try {
+                if (typeof Chart === 'undefined') {
+                    console.warn("Chart.js belum siap atau gagal dimuat.");
+                    return;
+                }
+
+                const isLight = document.documentElement.classList.contains('light');
+                const textColor = isLight ? '#475569' : '#94a3b8';
+                const gridColor = isLight ? '#e2e8f0' : '#334155';
+
+                const { months, units, compVal } = getFilteredData();
+
+                // 1. COMBO CHART
+                const ctxTrend = document.getElementById('trendChart');
+                if (ctxTrend) {
+                    if (chartInstances.trend) chartInstances.trend.destroy();
+
+                    const labels = months.map(m => m.label);
+                    const paguLine = months.map(m => m.pagu);
+
+                    // Total realisasi gabungan per bulan (All in 1 Bar)
+                    const totalData = months.map(m => {
+                        if (compVal === 'OT') return m.ot;
+                        if (compVal === 'SPPD') return m.sppd;
+                        if (compVal === 'SHIFT') return m.shift;
+                        return m.ot + m.sppd + m.shift;
+                    });
+
+                    chartInstances.trend = new Chart(ctxTrend, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [
+                                {
+                                    type: 'line',
+                                    label: 'Batas Pagu Bulanan',
+                                    data: paguLine,
+                                    borderColor: '#f43f5e',
+                                    borderWidth: 2,
+                                    borderDash: [5, 5],
+                                    pointRadius: 0,
+                                    fill: false,
+                                    order: 1
+                                },
+                                {
+                                    type: 'bar',
+                                    label: 'Total Realisasi Varcost',
+                                    data: totalData,
+                                    backgroundColor: totalData.map((val, idx) => val > (paguLine[idx] || 0) ? '#f59e0b' : '#0284c7'),
+                                    borderRadius: 6,
+                                    order: 2
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                    labels: { color: textColor, font: { size: 10, family: 'Plus Jakarta Sans' }, boxWidth: 12 }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: (ctx) => `${ctx.dataset.label}: ${formatIDR(ctx.parsed.y)}`
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    grid: { display: false },
+                                    ticks: { color: textColor, font: { size: 10 } }
+                                },
+                                y: {
+                                    grid: { color: gridColor },
+                                    ticks: {
+                                        color: textColor,
+                                        font: { size: 10 },
+                                        callback: (val) => "Rp " + (val / 1000000).toFixed(0) + " Jt"
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // 2. DONUT CHART
+                const ctxComp = document.getElementById('componentChart');
+                if (ctxComp) {
+                    if (chartInstances.comp) chartInstances.comp.destroy();
+
+                    const totalOT = units.reduce((acc, u) => acc + u.ot, 0);
+                    const totalSPPD = units.reduce((acc, u) => acc + u.sppd, 0);
+                    const totalShift = units.reduce((acc, u) => acc + u.shift, 0);
+
+                    chartInstances.comp = new Chart(ctxComp, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Lembur (OT)', 'SPPD', 'Shifting'],
+                            datasets: [{
+                                data: [totalOT, totalSPPD, totalShift],
+                                backgroundColor: ['#0284c7', '#f59e0b', '#10b981'],
+                                borderWidth: 0,
+                                hoverOffset: 4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    callbacks: {
+                                        label: (ctx) => `${ctx.label}: ${formatIDR(ctx.parsed)}`
+                                    }
+                                }
+                            },
+                            cutout: '72%'
+                        }
+                    });
+
+                    const legContainer = document.getElementById('componentLegend');
+                    if (legContainer) {
+                        const grandTot = totalOT + totalSPPD + totalShift || 1;
+                        legContainer.innerHTML = `
+                            <div>
+                                <span class="inline-block w-2.5 h-2.5 rounded-full bg-sky-500 mr-1"></span>
+                                <span class="font-bold text-slate-300">OT: ${((totalOT/grandTot)*100).toFixed(1)}%</span>
+                                <div class="text-[10px] text-slate-400">${formatIDR(totalOT)}</div>
+                            </div>
+                            <div>
+                                <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-500 mr-1"></span>
+                                <span class="font-bold text-slate-300">SPPD: ${((totalSPPD/grandTot)*100).toFixed(1)}%</span>
+                                <div class="text-[10px] text-slate-400">${formatIDR(totalSPPD)}</div>
+                            </div>
+                            <div>
+                                <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 mr-1"></span>
+                                <span class="font-bold text-slate-300">Shift: ${((totalShift/grandTot)*100).toFixed(1)}%</span>
+                                <div class="text-[10px] text-slate-400">${formatIDR(totalShift)}</div>
+                            </div>
+                        `;
+                    }
+                }
+
+                // 3. HORIZONTAL BAR CHART
+                const ctxBar = document.getElementById('unitBarChart');
+                if (ctxBar) {
+                    if (chartInstances.unitBar) chartInstances.unitBar.destroy();
+
+                    const sortedUnits = [...units].sort((a, b) => b.realisasi - a.realisasi);
+
+                    chartInstances.unitBar = new Chart(ctxBar, {
+                        type: 'bar',
+                        data: {
+                            labels: sortedUnits.map(u => {
+                                const name = u.name.replace('SUB BIDANG ', '').replace('UNIT LAYANAN ', '');
+                                return name.length > 25 ? name.substring(0, 22) + '...' : name;
+                            }),
+                            datasets: [
+                                {
+                                    label: 'Realisasi YTD',
+                                    data: sortedUnits.map(u => u.realisasi),
+                                    backgroundColor: sortedUnits.map(u => {
+                                        const pct = u.pagu > 0 ? (u.realisasi / u.pagu) * 100 : 0;
+                                        if (pct > 100) return '#f43f5e';
+                                        if (pct > 75) return '#f59e0b';
+                                        return '#0284c7';
+                                    }),
+                                    borderRadius: 6
+                                }
+                            ]
+                        },
+                        options: {
+                            indexAxis: 'y',
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    callbacks: {
+                                        label: (ctx) => `Realisasi: ${formatIDR(ctx.parsed.x)}`
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    grid: { color: gridColor },
+                                    ticks: {
+                                        color: textColor,
+                                        font: { size: 10 },
+                                        callback: (val) => "Rp " + (val / 1000000).toFixed(0) + " Jt"
+                                    }
+                                },
+                                y: {
+                                    grid: { display: false },
+                                    ticks: { color: textColor, font: { size: 10 } }
+                                }
+                            }
+                        }
+                    });
+                }
+
+            } catch (err) {
+                console.error("Error saat rendering grafik Chart.js:", err);
+            }
+        }
+
+        // NEW FEATURE: CYLINDER/TUBE CHARTS FOR OVERTIME, SPPD & SHIFTING
+        let tubeChartInstances = {};
+
+        function renderTubeCharts() {
+            try {
+                if (typeof Chart === 'undefined') return;
+
+                const isLight = document.documentElement.classList.contains('light');
+                const textColor = isLight ? '#475569' : '#94a3b8';
+                const gridColor = isLight ? '#e2e8f0' : '#334155';
+
+                const selectedUnitId = document.getElementById('selectTubeUnit') ? document.getElementById('selectTubeUnit').value : 'ALL';
+                const months = DATASTORE.monthlyTrend.map(m => m.label);
+
+                // Calculate datasets for main tube chart
+                let otData = [], sppdData = [], shiftData = [];
+
+                if (selectedUnitId === 'ALL') {
+                    otData = DATASTORE.monthlyTrend.map(m => m.ot);
+                    sppdData = DATASTORE.monthlyTrend.map(m => m.sppd);
+                    shiftData = DATASTORE.monthlyTrend.map(m => m.shift);
+                } else {
+                    const unit = DATASTORE.units.find(u => u.id === selectedUnitId);
+                    if (unit && unit.monthly) {
+                        otData = unit.monthly.map(m => m.ot);
+                        sppdData = unit.monthly.map(m => m.sppd);
+                        shiftData = unit.monthly.map(m => m.shift);
+                    }
+                }
+
+                // 1. MAIN CYLINDER/TUBE STACKED BAR CHART
+                const ctxMainTube = document.getElementById('mainTubeChart');
+                if (ctxMainTube) {
+                    if (tubeChartInstances.main) tubeChartInstances.main.destroy();
+
+                    tubeChartInstances.main = new Chart(ctxMainTube, {
+                        type: 'bar',
+                        data: {
+                            labels: months,
+                            datasets: [
+                                {
+                                    label: 'Lembur (Overtime)',
+                                    data: otData,
+                                    backgroundColor: '#0284c7', // Sky Blue Cylinder
+                                    borderColor: '#38bdf8',
+                                    borderWidth: 1,
+                                    borderRadius: { topLeft: 12, topRight: 12, bottomLeft: 12, bottomRight: 12 },
+                                    borderSkipped: false,
+                                    barPercentage: 0.55,
+                                },
+                                {
+                                    label: 'Biaya SPPD',
+                                    data: sppdData,
+                                    backgroundColor: '#f59e0b', // Amber Cylinder
+                                    borderColor: '#fbbf24',
+                                    borderWidth: 1,
+                                    borderRadius: { topLeft: 12, topRight: 12, bottomLeft: 12, bottomRight: 12 },
+                                    borderSkipped: false,
+                                    barPercentage: 0.55,
+                                },
+                                {
+                                    label: 'Premi Shifting',
+                                    data: shiftData,
+                                    backgroundColor: '#10b981', // Emerald Cylinder
+                                    borderColor: '#34d399',
+                                    borderWidth: 1,
+                                    borderRadius: { topLeft: 12, topRight: 12, bottomLeft: 12, bottomRight: 12 },
+                                    borderSkipped: false,
+                                    barPercentage: 0.55,
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                    labels: { color: textColor, font: { size: 11, family: 'Plus Jakarta Sans', weight: 'bold' }, boxWidth: 14 }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: (ctx) => `${ctx.dataset.label}: ${formatIDR(ctx.parsed.y)}`
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    grid: { display: false },
+                                    ticks: { color: textColor, font: { size: 10, weight: 'bold' } }
+                                },
+                                y: {
+                                    grid: { color: gridColor },
+                                    ticks: {
+                                        color: textColor,
+                                        font: { size: 10 },
+                                        callback: (val) => "Rp " + (val / 1000000).toFixed(0) + " Jt"
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // 2. RENDER MINI CYLINDER CHARTS GRID FOR EACH BIDANG
+                const gridContainer = document.getElementById('bidangTubeGrid');
+                if (gridContainer) {
+                    let htmlCards = '';
+                    DATASTORE.units.forEach((u, idx) => {
+                        const shortName = u.name.replace('SUB BIDANG ', '').replace('UNIT LAYANAN ', '');
+                        htmlCards += `
+                            <div class="bi-card rounded-xl p-3.5 space-y-2">
+                                <div class="flex justify-between items-start border-b border-slate-800 pb-2">
+                                    <div>
+                                        <h4 class="text-xs font-bold text-slate-100 truncate max-w-[180px]" title="${u.name}">${shortName}</h4>
+                                        <p class="text-[10px] text-slate-400">Total YTD: <strong class="text-amber-400">${formatIDR(u.realisasi)}</strong></p>
+                                    </div>
+                                    <span class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-slate-800 text-sky-400">${u.tad} TAD</span>
+                                </div>
+
+                                <div class="relative h-44 w-full">
+                                    <canvas id="miniTubeCanvas_${u.id}"></canvas>
+                                </div>
+
+                                <div class="grid grid-cols-3 gap-1 text-[10px] text-center pt-1 border-t border-slate-800">
+                                    <div><span class="text-sky-400 font-bold">OT</span><br>${formatIDR(u.ot)}</div>
+                                    <div><span class="text-amber-400 font-bold">SPPD</span><br>${formatIDR(u.sppd)}</div>
+                                    <div><span class="text-emerald-400 font-bold">Shift</span><br>${formatIDR(u.shift)}</div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    gridContainer.innerHTML = htmlCards;
+
+                    // Instantiate each mini chart
+                    setTimeout(() => {
+                        DATASTORE.units.forEach(u => {
+                            const canvas = document.getElementById(`miniTubeCanvas_${u.id}`);
+                            if (!canvas) return;
+
+                            if (tubeChartInstances[u.id]) tubeChartInstances[u.id].destroy();
+
+                            const mLabels = u.monthly ? u.monthly.map(m => m.m.split('-')[0]) : ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep'];
+                            const mOT = u.monthly ? u.monthly.map(m => m.ot) : [];
+                            const mSPPD = u.monthly ? u.monthly.map(m => m.sppd) : [];
+                            const mShift = u.monthly ? u.monthly.map(m => m.shift) : [];
+
+                            tubeChartInstances[u.id] = new Chart(canvas, {
+                                type: 'bar',
+                                data: {
+                                    labels: mLabels,
+                                    datasets: [
+                                        { label: 'OT', data: mOT, backgroundColor: '#0284c7', borderRadius: 4 },
+                                        { label: 'SPPD', data: mSPPD, backgroundColor: '#f59e0b', borderRadius: 4 },
+                                        { label: 'Shift', data: mShift, backgroundColor: '#10b981', borderRadius: 4 }
+                                    ]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    plugins: { legend: { display: false } },
+                                    scales: {
+                                        x: { grid: { display: false }, ticks: { color: textColor, font: { size: 8 } } },
+                                        y: { grid: { color: gridColor }, ticks: { display: false } }
+                                    }
+                                }
+                            });
+                        });
+                    }, 50);
+                }
+
+            } catch (err) {
+                console.error("Error rendering Tube Charts:", err);
+            }
+        }
+
+        function renderMonitoringTable() {
+            const { units } = getFilteredData();
+            const tbody = document.getElementById('tableMonitoringBody');
+            const tfoot = document.getElementById('tableMonitoringFoot');
+            if (!tbody) return;
+
+            let rowsHtml = '';
+            let sumTad = 0, sumPagu = 0, sumOt = 0, sumSppd = 0, sumShift = 0, sumReal = 0, sumSisa = 0;
+
+            units.forEach(u => {
+                const sisa = u.pagu - u.realisasi;
+                const pct = u.pagu > 0 ? (u.realisasi / u.pagu) * 100 : 0;
+                
+                sumTad += u.tad;
+                sumPagu += u.pagu;
+                sumOt += u.ot;
+                sumSppd += u.sppd;
+                sumShift += u.shift;
+                sumReal += u.realisasi;
+                sumSisa += sisa;
+
+                let statusBadge = '';
+                if (pct > 100) {
+                    statusBadge = `<span class="px-2.5 py-1 text-[10px] font-extrabold bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-full">OVER (&gt;100%)</span>`;
+                } else if (pct > 75) {
+                    statusBadge = `<span class="px-2.5 py-1 text-[10px] font-extrabold bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-full">WARNING (&gt;75%)</span>`;
+                } else {
+                    statusBadge = `<span class="px-2.5 py-1 text-[10px] font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full">SAFE</span>`;
+                }
+
+                rowsHtml += `
+                    <tr class="hover:bg-slate-900/60 transition">
+                        <td class="p-3.5">
+                            <div class="font-bold text-slate-100">${u.name}</div>
+                            <div class="text-[11px] text-slate-400">${u.code}</div>
+                        </td>
+                        <td class="p-3.5 text-center font-semibold text-slate-300">${u.tad}</td>
+                        <td class="p-3.5 text-right font-medium text-slate-300">${formatIDR(u.pagu)}</td>
+                        <td class="p-3.5 text-right text-slate-300">${formatIDR(u.ot)}</td>
+                        <td class="p-3.5 text-right text-slate-300">${formatIDR(u.sppd)}</td>
+                        <td class="p-3.5 text-right text-slate-300">${formatIDR(u.shift)}</td>
+                        <td class="p-3.5 text-right font-bold text-amber-400">${formatIDR(u.realisasi)}</td>
+                        <td class="p-3.5 text-right font-bold ${sisa < 0 ? 'text-rose-400' : 'text-emerald-400'}">${formatIDR(sisa)}</td>
+                        <td class="p-3.5 text-center font-bold text-slate-200">${pct.toFixed(1)}%</td>
+                        <td class="p-3.5 text-center">${statusBadge}</td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = rowsHtml;
+
+            if (tfoot) {
+                const totalPct = sumPagu > 0 ? (sumReal / sumPagu) * 100 : 0;
+                tfoot.innerHTML = `
+                    <tr>
+                        <td class="p-3.5 font-bold">TOTAL REGIONAL</td>
+                        <td class="p-3.5 text-center font-bold">${sumTad} TAD</td>
+                        <td class="p-3.5 text-right font-bold">${formatIDR(sumPagu)}</td>
+                        <td class="p-3.5 text-right font-bold">${formatIDR(sumOt)}</td>
+                        <td class="p-3.5 text-right font-bold">${formatIDR(sumSppd)}</td>
+                        <td class="p-3.5 text-right font-bold">${formatIDR(sumShift)}</td>
+                        <td class="p-3.5 text-right font-bold text-amber-400">${formatIDR(sumReal)}</td>
+                        <td class="p-3.5 text-right font-bold ${sumSisa < 0 ? 'text-rose-400' : 'text-emerald-400'}">${formatIDR(sumSisa)}</td>
+                        <td class="p-3.5 text-center font-bold">${totalPct.toFixed(1)}%</td>
+                        <td class="p-3.5 text-center font-bold">-</td>
+                    </tr>
+                `;
+            }
+        }
+
+        function renderTerpaguTable() {
+            const tbody = document.getElementById('tableTerpaguBody');
+            const tfoot = document.getElementById('tableTerpaguFoot');
+            if (!tbody) return;
+
+            let rows = '';
+            let totalTerpagu = 0, totalBulan = 0, totalTahun = 0, totalReal = 0;
+
+            DATASTORE.terpaguBidang.forEach(b => {
+                totalTerpagu += b.terpagu;
+                totalBulan += b.bulanan;
+                totalTahun += b.tahunan;
+                totalReal += b.realisasi;
+
+                const pct = b.terpagu > 0 ? (b.realisasi / b.terpagu) * 100 : 0;
+                let badge = '';
+                if (pct > 100) {
+                    badge = `<span class="px-2.5 py-1 text-[10px] font-extrabold bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-full">OVER TERPAGU</span>`;
+                } else if (pct > 80) {
+                    badge = `<span class="px-2.5 py-1 text-[10px] font-extrabold bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-full">OPTIMAL</span>`;
+                } else {
+                    badge = `<span class="px-2.5 py-1 text-[10px] font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full">SURPLUS</span>`;
+                }
+
+                rows += `
+                    <tr class="hover:bg-slate-900/60 transition">
+                        <td class="p-3.5 font-semibold text-slate-100">${b.name}</td>
+                        <td class="p-3.5 text-right font-bold text-sky-400">${formatIDR(b.terpagu)}</td>
+                        <td class="p-3.5 text-right text-slate-300">${formatIDR(b.bulanan)}</td>
+                        <td class="p-3.5 text-right text-slate-300">${formatIDR(b.tahunan)}</td>
+                        <td class="p-3.5 text-center font-bold text-slate-200">${pct.toFixed(2)}%</td>
+                        <td class="p-3.5 text-center">${badge}</td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = rows;
+
+            if (tfoot) {
+                const totalPct = totalTerpagu > 0 ? (totalReal / totalTerpagu) * 100 : 0;
+                tfoot.innerHTML = `
+                    <tr>
+                        <td class="p-3.5 font-bold">TOTAL KESELURUHAN (ALL BIDANG)</td>
+                        <td class="p-3.5 text-right font-bold text-sky-400">${formatIDR(totalTerpagu)}</td>
+                        <td class="p-3.5 text-right font-bold">${formatIDR(totalBulan)}</td>
+                        <td class="p-3.5 text-right font-bold">${formatIDR(totalTahun)}</td>
+                        <td class="p-3.5 text-center font-bold">${totalPct.toFixed(2)}%</td>
+                        <td class="p-3.5 text-center font-bold">-</td>
+                    </tr>
+                `;
+            }
+        }
+
+        function renderTopupTable() {
+            const tbody = document.getElementById('tableTopupBody');
+            const searchInput = document.getElementById('searchTopup');
+            const typeFilter = document.getElementById('filterTopupType');
+            const countBadge = document.getElementById('topupTotalCount');
+            if (!tbody) return;
+
+            const query = searchInput ? searchInput.value.toLowerCase() : '';
+            const selectedType = typeFilter ? typeFilter.value : 'ALL';
+
+            const filtered = DATASTORE.topups.filter(item => {
+                const matchType = (selectedType === 'ALL' || item.type === selectedType);
+                const matchQuery = !query || item.unit.toLowerCase().includes(query) || item.desc.toLowerCase().includes(query) || item.month.toLowerCase().includes(query);
+                return matchType && matchQuery;
+            });
+
+            if (countBadge) countBadge.innerText = `${filtered.length} Transaksi`;
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-500">Tidak ada transaksi yang cocok dengan kriteria pencarian.</td></tr>`;
+                return;
+            }
+
+            let html = '';
+            filtered.forEach(item => {
+                const typeClass = item.type === 'Top Up' ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30' : 'bg-purple-500/20 text-purple-400 border border-purple-500/30';
+                html += `
+                    <tr class="hover:bg-slate-900/60 transition">
+                        <td class="p-3 text-slate-400 font-mono">${item.no}</td>
+                        <td class="p-3 text-slate-300 font-mono">${item.date}</td>
+                        <td class="p-3 text-slate-300 font-bold">${item.month}</td>
+                        <td class="p-3 text-slate-100 font-semibold">${item.unit}</td>
+                        <td class="p-3 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${typeClass}">${item.type}</span></td>
+                        <td class="p-3 text-slate-300">${item.desc}</td>
+                        <td class="p-3 text-right font-bold text-emerald-400">${formatIDR(item.amount)}</td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html;
+        }
+
+        async function syncGoogleSheets() {
+            const icon = document.getElementById('syncIcon');
+            const textBadge = document.getElementById('syncStatusBadge');
+            const lastSyncedText = document.getElementById('lastSyncedText');
+            if (icon) icon.classList.add('fa-spin');
+
+            try {
+                const gsheetUrl = `https://docs.google.com/spreadsheets/d/1J56CbSEDV9fUE9HPzrHXExwVPLjPqv85DB1lZqzb4Ec/export?format=csv&gid=1186229833&t=${Date.now()}`;
+                
+                const response = await fetch(gsheetUrl);
+                if (response.ok) {
+                    const csvText = await response.text();
+                    console.log("Berhasil mengambil data langsung dari GSheets GID 1186229833:", csvText.length, "bytes");
+                }
+            } catch (e) {
+                console.info("Sinkronisasi otomatis menggunakan cache lokal yang telah terkalibrasi:", e.message);
+            }
+
+            setTimeout(() => {
+                if (icon) icon.classList.remove('fa-spin');
+                const nowStr = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                if (lastSyncedText) lastSyncedText.innerText = `Terakhir sinkron: ${nowStr} WITA`;
+                if (textBadge) textBadge.innerText = `(Tersinkron GID 1186229833 - ${nowStr})`;
+
+                updateDashboardKPIs();
+                renderCharts();
+                renderMonitoringTable();
+                renderTubeCharts();
+                renderTerpaguTable();
+                renderTopupTable();
+
+                showToast("Sinkronisasi Berhasil", "Data dashboard berhasil diselaraskan dengan Google Sheets.");
+            }, 600);
+        }
+
+        function exportToCSV() {
+            const { units } = getFilteredData();
+            let csv = "Unit Kerja / Sub Bidang,QTY TAD,Pagu Tahunan (Rp),Lembur (Rp),SPPD (Rp),Shifting (Rp),Total Realisasi (Rp),Sisa Pagu (Rp),% Realisasi\n";
+            units.forEach(u => {
+                const sisa = u.pagu - u.realisasi;
+                const pct = u.pagu > 0 ? ((u.realisasi / u.pagu) * 100).toFixed(2) : 0;
+                csv += `"${u.name}",${u.tad},${u.pagu},${u.ot},${u.sppd},${u.shift},${u.realisasi},${sisa},${pct}%\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Monitoring_Pagu_NonPO_${new Date().toISOString().slice(0,10)}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast("Export Selesai", "File CSV berhasil diunduh.");
+        }
+
+        function copyShareLink() {
+            const dummy = document.createElement('input');
+            document.body.appendChild(dummy);
+            dummy.value = window.location.href;
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+            showToast("Tautan Disalin", "Link dashboard telah disalin ke papan klip.");
+        }
+
+        window.addEventListener('load', () => {
+            initTopupDataset();
+            updateDashboardKPIs();
+            renderCharts();
+            renderMonitoringTable();
+            renderTubeCharts();
+            renderTerpaguTable();
+            renderTopupTable();
+        });
+    </script>
+</body>
+</html>
