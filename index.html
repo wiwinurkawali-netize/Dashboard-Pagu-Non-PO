@@ -75,9 +75,9 @@
     </div>
 
     <!-- Header Navigation -->
-    <header class="no-print sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 shadow-lg">
-        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-3">
-            <div class="flex flex-col lg:flex-row items-center justify-between gap-3">
+    <header class="no-print sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 shadow-md">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
                 
                 <!-- Logo & Title -->
                 <div class="flex items-center space-x-3.5 w-full lg:w-auto justify-between lg:justify-start">
@@ -100,39 +100,39 @@
                 </div>
 
                 <!-- Navigation Tabs -->
-                <div class="flex items-center space-x-1 bg-slate-950/80 p-1.5 rounded-xl border border-slate-800 text-xs font-medium overflow-x-auto max-w-full">
-                    <button onclick="switchTab('tab-ringkasan')" id="btn-tab-ringkasan" class="tab-btn px-3 py-1.5 rounded-lg bg-sky-600 text-white font-semibold transition whitespace-nowrap">
+                <div class="flex items-center space-x-1.5 bg-slate-950/80 p-1.5 rounded-xl border border-slate-800 text-xs font-medium overflow-x-auto max-w-full">
+                    <button onclick="switchTab('tab-ringkasan')" id="btn-tab-ringkasan" class="tab-btn px-3 py-2 rounded-lg bg-sky-600 text-white font-semibold transition whitespace-nowrap">
                         <i class="fa-solid fa-gauge-high mr-1.5"></i> Ringkasan Eksekutif
                     </button>
-                    <button onclick="switchTab('tab-monitoring')" id="btn-tab-monitoring" class="tab-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition whitespace-nowrap">
+                    <button onclick="switchTab('tab-monitoring')" id="btn-tab-monitoring" class="tab-btn px-3 py-2 rounded-lg text-slate-400 hover:text-white transition whitespace-nowrap">
                         <i class="fa-solid fa-table-list mr-1.5"></i> Matriks Unit & Limit
                     </button>
-                    <button onclick="switchTab('tab-trend-bidang')" id="btn-tab-trend-bidang" class="tab-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition whitespace-nowrap">
+                    <button onclick="switchTab('tab-trend-bidang')" id="btn-tab-trend-bidang" class="tab-btn px-3 py-2 rounded-lg text-slate-400 hover:text-white transition whitespace-nowrap">
                         <i class="fa-solid fa-chart-column mr-1.5"></i> Trend per Bidang
                     </button>
-                    <button onclick="switchTab('tab-relokasi')" id="btn-tab-relokasi" class="tab-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition whitespace-nowrap">
+                    <button onclick="switchTab('tab-relokasi')" id="btn-tab-relokasi" class="tab-btn px-3 py-2 rounded-lg text-slate-400 hover:text-white transition whitespace-nowrap">
                         <i class="fa-solid fa-arrows-rotate mr-1.5"></i> Top-Up & Terpagu
                     </button>
                 </div>
 
                 <!-- Action Tools -->
                 <div class="flex items-center space-x-2 w-full lg:w-auto justify-end">
-                    <button onclick="syncGoogleSheets()" id="btnSyncGsheets" class="px-3 py-1.5 text-xs bg-sky-600 hover:bg-sky-500 text-white font-semibold rounded-lg shadow transition flex items-center gap-1.5" title="Sinkronkan data dengan Google Sheets">
+                    <button onclick="syncGoogleSheets()" id="btnSyncGsheets" class="px-3 py-2 text-xs bg-sky-600 hover:bg-sky-500 text-white font-semibold rounded-lg shadow transition flex items-center gap-1.5" title="Sinkronkan data dengan Google Sheets">
                         <i id="syncIcon" class="fa-solid fa-rotate"></i>
                         <span>Sync GSheets</span>
                     </button>
 
-                    <button onclick="openModal('ruleModal')" class="hidden xl:flex items-center space-x-1.5 text-xs bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 px-3 py-1.5 rounded-lg transition">
+                    <button onclick="openModal('ruleModal')" class="hidden xl:flex items-center space-x-1.5 text-xs bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 px-3 py-2 rounded-lg transition">
                         <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
                         <span>Aturan Limit &lt;10%</span>
                     </button>
 
-                    <button onclick="exportToCSV()" class="px-3 py-1.5 text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg shadow transition flex items-center gap-1.5">
+                    <button onclick="exportToCSV()" class="px-3 py-2 text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg shadow transition flex items-center gap-1.5">
                         <i class="fa-solid fa-file-csv"></i>
                         <span>Export</span>
                     </button>
 
-                    <button onclick="toggleTheme()" class="p-2 text-slate-400 hover:text-white rounded-lg bg-slate-800 border border-slate-700 transition" title="Ganti Tema">
+                    <button onclick="toggleTheme()" class="p-2.5 text-slate-400 hover:text-white rounded-lg bg-slate-800 border border-slate-700 transition" title="Ganti Tema">
                         <i id="themeIcon" class="fa-solid fa-moon"></i>
                     </button>
                 </div>
@@ -465,7 +465,6 @@
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-2">
-                    <!-- Cylinder Trend 1 -->
                     <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 space-y-3">
                         <h4 class="text-xs font-bold text-sky-400 flex items-center gap-1.5">
                             <i class="fa-solid fa-clock"></i> Trend Lembur (Overtime)
@@ -475,7 +474,6 @@
                         </div>
                     </div>
 
-                    <!-- Cylinder Trend 2 -->
                     <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 space-y-3">
                         <h4 class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
                             <i class="fa-solid fa-plane"></i> Trend Biaya SPPD
@@ -485,7 +483,6 @@
                         </div>
                     </div>
 
-                    <!-- Cylinder Trend 3 -->
                     <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 space-y-3">
                         <h4 class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
                             <i class="fa-solid fa-shuffle"></i> Trend Premi Shifting
@@ -821,7 +818,6 @@
                 const gridColor = isLight ? '#e2e8f0' : '#334155';
                 const { months, units } = getFilteredData();
 
-                // 1. TREND CHART (Single Bar Total Realisasi)
                 const ctxTrend = document.getElementById('trendChart');
                 if (ctxTrend) {
                     if (chartInstances.trend) chartInstances.trend.destroy();
@@ -870,7 +866,6 @@
                     });
                 }
 
-                // 2. COMPONENT DONUT
                 const ctxComp = document.getElementById('componentChart');
                 if (ctxComp) {
                     if (chartInstances.comp) chartInstances.comp.destroy();
@@ -902,7 +897,6 @@
                     }
                 }
 
-                // 3. UNIT RANKING BAR
                 const ctxBar = document.getElementById('unitBarChart');
                 if (ctxBar) {
                     if (chartInstances.unitBar) chartInstances.unitBar.destroy();
@@ -941,7 +935,6 @@
             }
         }
 
-        // Render Cylinder Charts (Tab Trend per Bidang)
         function renderCylinderCharts() {
             try {
                 if (typeof Chart === 'undefined') return;
@@ -950,7 +943,6 @@
                 const gridColor = isLight ? '#e2e8f0' : '#334155';
                 const selectedUnit = document.getElementById('trendBidangSelect')?.value || 'ALL';
 
-                // Kalkulasi data bulanan berdasarkan unit yang dipilih
                 let months = ["Jan-26", "Feb-26", "Mar-26", "Apr-26", "Mei-26", "Jun-26", "Jul-26", "Agu-26", "Sep-26"];
                 let otArr = [16994000, 9698000, 22667000, 29792000, 28278000, 21336000, 29911000, 27590000, 0];
                 let sppdArr = [21507200, 28788850, 22659262, 52207081, 12029439, 7645260, 16334360, 38401583, 0];
@@ -963,16 +955,12 @@
                     shiftArr = shiftArr.map(v => Math.round(v * factor));
                 }
 
-                // Cylinder OT Chart
                 const ctxOt = document.getElementById('cylinderOtChart');
                 if (ctxOt) {
                     if (chartInstances.cylOt) chartInstances.cylOt.destroy();
                     chartInstances.cylOt = new Chart(ctxOt, {
                         type: 'bar',
-                        data: {
-                            labels: months,
-                            datasets: [{ label: 'Lembur (OT)', data: otArr, backgroundColor: '#0284c7', borderRadius: 12, borderSkipped: false }]
-                        },
+                        data: { labels: months, datasets: [{ label: 'Lembur (OT)', data: otArr, backgroundColor: '#0284c7', borderRadius: 12, borderSkipped: false }] },
                         options: {
                             responsive: true, maintainAspectRatio: false,
                             plugins: { legend: { display: false } },
@@ -984,16 +972,12 @@
                     });
                 }
 
-                // Cylinder SPPD Chart
                 const ctxSppd = document.getElementById('cylinderSppdChart');
                 if (ctxSppd) {
                     if (chartInstances.cylSppd) chartInstances.cylSppd.destroy();
                     chartInstances.cylSppd = new Chart(ctxSppd, {
                         type: 'bar',
-                        data: {
-                            labels: months,
-                            datasets: [{ label: 'SPPD', data: sppdArr, backgroundColor: '#f59e0b', borderRadius: 12, borderSkipped: false }]
-                        },
+                        data: { labels: months, datasets: [{ label: 'SPPD', data: sppdArr, backgroundColor: '#f59e0b', borderRadius: 12, borderSkipped: false }] },
                         options: {
                             responsive: true, maintainAspectRatio: false,
                             plugins: { legend: { display: false } },
@@ -1005,16 +989,12 @@
                     });
                 }
 
-                // Cylinder Shift Chart
                 const ctxShift = document.getElementById('cylinderShiftChart');
                 if (ctxShift) {
                     if (chartInstances.cylShift) chartInstances.cylShift.destroy();
                     chartInstances.cylShift = new Chart(ctxShift, {
                         type: 'bar',
-                        data: {
-                            labels: months,
-                            datasets: [{ label: 'Shifting', data: shiftArr, backgroundColor: '#10b981', borderRadius: 12, borderSkipped: false }]
-                        },
+                        data: { labels: months, datasets: [{ label: 'Shifting', data: shiftArr, backgroundColor: '#10b981', borderRadius: 12, borderSkipped: false }] },
                         options: {
                             responsive: true, maintainAspectRatio: false,
                             plugins: { legend: { display: false } },
@@ -1042,17 +1022,9 @@
             units.forEach(u => {
                 const sisa = u.pagu - u.realisasi;
                 const pct = u.pagu > 0 ? (u.realisasi / u.pagu) * 100 : 0;
-                
                 sumTad += u.tad; sumPagu += u.pagu; sumOt += u.ot; sumSppd += u.sppd; sumShift += u.shift; sumReal += u.realisasi; sumSisa += sisa;
 
-                let statusBadge = '';
-                if (pct > 100) {
-                    statusBadge = `<span class="px-2.5 py-1 text-[10px] font-extrabold bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-full">OVER (&gt;100%)</span>`;
-                } else if (pct > 75) {
-                    statusBadge = `<span class="px-2.5 py-1 text-[10px] font-extrabold bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-full">WARNING (&gt;75%)</span>`;
-                } else {
-                    statusBadge = `<span class="px-2.5 py-1 text-[10px] font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full">SAFE</span>`;
-                }
+                let statusBadge = pct > 100 ? `<span class="px-2.5 py-1 text-[10px] font-extrabold bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-full">OVER (&gt;100%)</span>` : pct > 75 ? `<span class="px-2.5 py-1 text-[10px] font-extrabold bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-full">WARNING (&gt;75%)</span>` : `<span class="px-2.5 py-1 text-[10px] font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full">SAFE</span>`;
 
                 rowsHtml += `
                     <tr class="hover:bg-slate-900/60 transition">
