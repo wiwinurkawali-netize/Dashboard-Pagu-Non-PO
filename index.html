@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Monitoring Pagu Non PO & Kontrak TAD - Regional Sulawesi & IBT II</title>
+    <title>Monitoring Pagu Non PO Non Teknis - Regional Sulawesi & IBT II</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js CDN (UMD Minified Bundle) -->
@@ -82,8 +82,15 @@
                 <!-- Logo & Title -->
                 <div class="flex items-center space-x-3.5 w-full lg:w-auto justify-between lg:justify-start">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-blue-600 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-sky-500/20">
-                            <i class="fa-solid fa-chart-pie"></i>
+                        <!-- Logo PLN Icon Plus Resmi Sesuai Background -->
+                        <div class="flex items-center bg-slate-950 px-2.5 py-1.5 rounded-xl border border-slate-800 shadow-inner">
+                            <div class="w-7 h-7 bg-yellow-400 rounded flex items-center justify-center p-0.5 shrink-0 mr-2 shadow">
+                                <svg viewBox="0 0 24 24" class="w-5 h-5 text-red-600 fill-current"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                            </div>
+                            <div class="leading-tight">
+                                <div class="text-white font-extrabold text-xs tracking-wider">PLN</div>
+                                <div class="text-slate-300 font-medium text-[10px] tracking-tight">Icon Plus</div>
+                            </div>
                         </div>
                         <div>
                             <div class="flex items-center space-x-2">
@@ -93,7 +100,7 @@
                                 <span class="text-xs text-slate-400 hidden sm:inline">| SBU Regional Sulawesi & IBT II</span>
                             </div>
                             <h1 class="text-sm sm:text-base font-bold tracking-tight text-white">
-                                Monitoring Pagu Non PO & Kontrak TAD
+                                Monitoring Pagu Non PO Non Teknis
                             </h1>
                         </div>
                     </div>
@@ -452,9 +459,7 @@
                 </div>
 
                 <!-- GRID 8 UNIT CARDS -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-2" id="unitCylinderGrid">
-                    <!-- Kartu-kartu akan dirender dinamis via JavaScript -->
-                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-2" id="unitCylinderGrid"></div>
             </div>
         </div>
 
@@ -907,7 +912,6 @@
             const months = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep"];
 
             DATASTORE.units.forEach((u, idx) => {
-                const cardId = `unitCard_${idx}`;
                 gridHtml += `
                     <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 space-y-3 flex flex-col justify-between shadow-lg">
                         <div>
@@ -931,7 +935,6 @@
 
             gridContainer.innerHTML = gridHtml;
 
-            // Render Chart.js for each unit card
             DATASTORE.units.forEach((u, idx) => {
                 const canvasEl = document.getElementById(`chart_${idx}`);
                 if (!canvasEl) return;
