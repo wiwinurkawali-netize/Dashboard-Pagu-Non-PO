@@ -268,7 +268,7 @@
                 </div>
                 <div class="mt-3 flex items-center justify-between text-xs text-slate-400 border-t border-slate-800 pt-2">
                     <span>Sheet Top Up Non PO</span>
-                    <span class="text-emerald-400 font-bold">Terisi 8 Bidang</span>
+                    <span class="text-emerald-400 font-bold">8 Bidang</span>
                 </div>
             </div>
 
@@ -352,21 +352,20 @@
                         <div class="mt-4 space-y-3 text-xs">
                             <div class="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-200">
                                 <div class="font-bold flex items-center gap-1.5 text-rose-400 mb-1">
-                                    <i class="fa-solid fa-circle-exclamation"></i> 3 Unit Over Terpagu (>100%):
+                                    <i class="fa-solid fa-circle-exclamation"></i> Over Terpagu (>100%):
                                 </div>
                                 <p class="text-slate-300">
-                                    <strong>Palu, Kendari, Mamuju:</strong> 111.53%<br>
-                                    <strong>UL Sulutenggo:</strong> 109.98%<br>
-                                    <strong>Operasi, Pemeliharaan & Aset:</strong> 107.09%
+                                    <strong>Penjualan Ritel & Admin:</strong> 117.24%<br>
+                                    <strong>Delivery Layanan:</strong> 89.41% (Max 99.34%)
                                 </p>
                             </div>
 
                             <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-200">
                                 <div class="font-bold flex items-center gap-1.5 text-amber-400 mb-1">
-                                    <i class="fa-solid fa-triangle-exclamation"></i> 3 Unit Status Optimal (80-100%):
+                                    <i class="fa-solid fa-triangle-exclamation"></i> Status Optimal (80-90%):
                                 </div>
                                 <p class="text-slate-300">
-                                    <strong>Delivery Layanan:</strong> 99.12% | <strong>Ritel & Admin:</strong> 91.68% | <strong>Maluku & Malut:</strong> 87.36%
+                                    <strong>Maluku & Malut:</strong> 80.08% | <strong>Papua & Papua Barat:</strong> 78.40%
                                 </p>
                             </div>
                         </div>
@@ -461,7 +460,7 @@
             </div>
         </div>
 
-        <!-- TAB 4: SHEET TOP UP NON PO (DENGAN DATA PERSIS GSHEET TERBARU Anda) -->
+        <!-- TAB 4: SHEET TOP UP NON PO (DENGAN DATA PERSIS GSHEET TERBARU GAMBAR ANDA) -->
         <div id="tab-relokasi" class="tab-content hidden space-y-6">
             <div class="bi-card rounded-2xl p-5 shadow-sm space-y-4">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
@@ -470,7 +469,7 @@
                             <i class="fa-solid fa-sack-dollar text-amber-400"></i>
                             Total Anggaran Terpagu Masing-Masing Bidang (Sheet Top Up Non PO)
                         </h3>
-                        <p class="text-xs text-slate-400">Rincian alokasi anggaran terpagu (Total: <strong>Rp 628.223.100</strong>), pagu bulanan, pagu 12 bulan, dan persentase penyerapan per Sub Bidang</p>
+                        <p class="text-xs text-slate-400">Rincian alokasi anggaran terpagu (Total: <strong>Rp 628.223.100</strong>), pagu bulanan, pagu 12 bulan (Total: <strong>Rp 779.077.000</strong>), dan persentase penyerapan per Sub Bidang</p>
                     </div>
                 </div>
 
@@ -478,12 +477,12 @@
                     <table class="w-full text-left text-xs text-slate-200">
                         <thead class="bg-slate-900 text-slate-400 font-bold uppercase tracking-wider text-[10px] border-b border-slate-800">
                             <tr>
-                                <th class="p-3.5">SUB BIDANG / UNIT LAYANAN</th>
-                                <th class="p-3.5 text-right font-bold text-sky-400">ANGGARAN TERPAGU (RP)</th>
-                                <th class="p-3.5 text-right">PAGU / BULAN (RP)</th>
-                                <th class="p-3.5 text-right">PAGU 12 BULAN (RP)</th>
-                                <th class="p-3.5 text-center">% PENYERAPAN PAGU</th>
-                                <th class="p-3.5 text-center">STATUS PENYERAPAN</th>
+                                <th class="p-3.5">bidang</th>
+                                <th class="p-3.5 text-right font-bold text-sky-400">Anggaran Terpagu</th>
+                                <th class="p-3.5 text-right">Pagu / Bulan</th>
+                                <th class="p-3.5 text-right font-bold text-amber-400">Pagu 12 Bulan</th>
+                                <th class="p-3.5 text-center">% Penyerapan Pagu</th>
+                                <th class="p-3.5 text-center">Penyerapan Pagu Maximal (90%)</th>
                             </tr>
                         </thead>
                         <tbody id="tableTerpaguBody" class="divide-y divide-slate-800/60 bg-slate-950/40"></tbody>
@@ -524,16 +523,16 @@
                 { id: "SULUTENGGO", name: "UNIT LAYANAN SULUTENGGO", code: "Manado & Grtlo", tad: 16, realisasi: 128681610, ot: 35434000, sppd: 31979610, shift: 61268000, pagu: 159810667, monthlyData: [359000, 1843000, 4206000, 8860000, 6316000, 2077000, 6714000, 5059000, 0], sppdData: [4118000, 1987000, 2662000, 1919000, 4099000, 1594000, 1540000, 2099000, 0], shiftData: [8000000, 7500000, 9200000, 6800000, 10000000, 7500000, 5268000, 7000000, 0] }
             ],
 
-            // DATA TERUPDATE PERSIS DARI SHEET TOP UP NON PO KONTRAK 4500027047
+            // DATA TERUPDATE PERSIS 100% PERSIS DENGAN GAMBAR GSHEET TERBARU ANDA
             terpaguBidang: [
-                { name: "SUB BIDANG OPERASI, PEMELIHARAAN DAN ASET SULAWESI DAN IBT", terpagu: 16100000, bulanan: 1341667, tahunan: 16100000, realisasi: 17241093 },
-                { name: "SUB BIDANG PENJUALAN RITEL DAN ADMINISTRASI SULAWESI DAN IBT", terpagu: 222500000, bulanan: 18541667, tahunan: 222500000, realisasi: 203983280 },
-                { name: "SUB BIDANG PEMASARAN DAN PENJUALAN B2B SULAWESI DAN IBT", terpagu: 0, bulanan: 0, tahunan: 0, realisasi: 0 },
-                { name: "SUB BIDANG PEMBANGUNAN DAN DELIVERY LAYANAN SULAWESI DAN IBT", terpagu: 44650000, bulanan: 3720833, tahunan: 44650000, realisasi: 44256181 },
-                { name: "UNIT LAYANAN MALUKU DAN MALUKU UTARA", terpagu: 47990850, bulanan: 3999238, tahunan: 47990850, realisasi: 41923560 },
-                { name: "UNIT LAYANAN PALU, KENDARI DAN MAMUJU", terpagu: 133000000, bulanan: 11083333, tahunan: 133000000, realisasi: 148336480 },
-                { name: "UNIT LAYANAN PAPUA DAN PAPUA BARAT", terpagu: 46982250, bulanan: 3915188, tahunan: 46982250, realisasi: 39352842 },
-                { name: "UNIT LAYANAN SULUTENGGO", terpagu: 117000000, bulanan: 9750000, tahunan: 117000000, realisasi: 128681610 }
+                { name: "SUB BIDANG OPERASI, PEMELIHARAAN DAN ASET SULAWESI DAN IBT", terpagu: 16100000, bulanan: 2497042, tahunan: 29964500, pct: "53,73%", pctMax: "59,70%" },
+                { name: "SUB BIDANG PENJUALAN RITEL DAN ADMINISTRASI SULAWESI DAN IBT", terpagu: 222500000, bulanan: 15814597, tahunan: 189775167, pct: "117,24%", pctMax: "130,27%" },
+                { name: "SUB BIDANG PEMASARAN DAN PENJUALAN B2B SULAWESI DAN IBT", terpagu: 0, bulanan: 1664694, tahunan: 19976333, pct: "0,00%", pctMax: "0,00%" },
+                { name: "SUB BIDANG PEMBANGUNAN DAN DELIVERY LAYANAN SULAWESI DAN IBT", terpagu: 44650000, bulanan: 4161736, tahunan: 49940833, pct: "89,41%", pctMax: "99,34%" },
+                { name: "UNIT LAYANAN MALUKU DAN MALUKU UTARA", terpagu: 47990850, bulanan: 4994083, tahunan: 59929000, pct: "80,08%", pctMax: "88,98%" },
+                { name: "UNIT LAYANAN PALU, KENDARI DAN MAMUJU", terpagu: 133000000, bulanan: 17479292, tahunan: 209751500, pct: "63,41%", pctMax: "70,45%" },
+                { name: "UNIT LAYANAN PAPUA DAN PAPUA BARAT", terpagu: 46982250, bulanan: 4994083, tahunan: 59929000, pct: "78,40%", pctMax: "87,11%" },
+                { name: "UNIT LAYANAN SULUTENGGO", terpagu: 117000000, bulanan: 13317556, tahunan: 159810667, pct: "73,21%", pctMax: "81,35%" }
             ]
         };
 
@@ -709,43 +708,40 @@
             }
         }
 
-        // TAB TERPAGU TERUPDATE PERSIS GSHEET KONTRAK 4500027047
+        // TAB TERPAGU PERSIS SESUAI GAMBAR GSHEET TERBARU ANDA
         function renderTerpaguTable() {
             const tbody = document.getElementById('tableTerpaguBody');
             const tfoot = document.getElementById('tableTerpaguFoot');
             if (!tbody) return;
 
             let rows = '';
-            let totalTerpagu = 0, totalBulan = 0, totalTahun = 0, totalReal = 0;
+            let totalTerpagu = 628223100;
+            let totalBulan = 64923083;
+            let totalTahun = 779077000;
 
             DATASTORE.terpaguBidang.forEach(b => {
-                totalTerpagu += b.terpagu; totalBulan += b.bulanan; totalTahun += b.tahunan; totalReal += b.realisasi;
-                const pct = b.terpagu > 0 ? (b.realisasi / b.terpagu) * 100 : 0;
-                let badge = pct > 100 ? `<span class="px-2.5 py-1 text-[10px] font-extrabold bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-full">OVER TERPAGU</span>` : pct > 80 ? `<span class="px-2.5 py-1 text-[10px] font-extrabold bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-full">OPTIMAL</span>` : `<span class="px-2.5 py-1 text-[10px] font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full">SURPLUS</span>`;
-
                 rows += `
                     <tr class="hover:bg-slate-900/60 transition">
                         <td class="p-3.5 font-semibold text-slate-100">${b.name}</td>
                         <td class="p-3.5 text-right font-bold text-sky-400">${formatIDR(b.terpagu)}</td>
                         <td class="p-3.5 text-right text-slate-300">${formatIDR(b.bulanan)}</td>
-                        <td class="p-3.5 text-right text-slate-300">${formatIDR(b.tahunan)}</td>
-                        <td class="p-3.5 text-center font-bold text-slate-200">${pct.toFixed(2)}%</td>
-                        <td class="p-3.5 text-center">${badge}</td>
+                        <td class="p-3.5 text-right font-bold text-amber-400">${formatIDR(b.tahunan)}</td>
+                        <td class="p-3.5 text-center font-bold text-slate-200">${b.pct}</td>
+                        <td class="p-3.5 text-center font-bold text-emerald-400">${b.pctMax}</td>
                     </tr>
                 `;
             });
 
             tbody.innerHTML = rows;
             if (tfoot) {
-                const totalPct = totalTerpagu > 0 ? (totalReal / totalTerpagu) * 100 : 0;
                 tfoot.innerHTML = `
                     <tr>
-                        <td class="p-3.5 font-bold">TOTAL KESELURUHAN (ALL BIDANG)</td>
+                        <td class="p-3.5 font-bold">TOTAL</td>
                         <td class="p-3.5 text-right font-bold text-sky-400">${formatIDR(totalTerpagu)}</td>
                         <td class="p-3.5 text-right font-bold">${formatIDR(totalBulan)}</td>
-                        <td class="p-3.5 text-right font-bold">${formatIDR(totalTahun)}</td>
-                        <td class="p-3.5 text-center font-bold">${totalPct.toFixed(2)}%</td>
-                        <td class="p-3.5 text-center font-bold">-</td>
+                        <td class="p-3.5 text-right font-bold text-amber-400">${formatIDR(totalTahun)}</td>
+                        <td class="p-3.5 text-center font-bold">80,64%</td>
+                        <td class="p-3.5 text-center font-bold text-emerald-400">89,60%</td>
                     </tr>
                 `;
             }
@@ -762,7 +758,7 @@
                 renderCharts();
                 renderMonitoringTable();
                 renderTerpaguTable();
-                showToast("Sinkronisasi Berhasil", "Data berhasil diselaraskan dengan GSheet 702313109.");
+                showToast("Sinkronisasi Berhasil", "Data berhasil diselaraskan dengan GSheet.");
             }, 500);
         }
 
